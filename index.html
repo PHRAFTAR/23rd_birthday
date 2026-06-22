@@ -40,8 +40,16 @@
             --sticky-pink: #3a1f28;
             --sticky-blue: #10243a;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html {
+            -webkit-tap-highlight-color: transparent;
+            height: 100%;
+        }
         body {
             font-family: var(--font-body);
             background: var(--cream);
@@ -52,48 +60,164 @@
             min-height: 100vh;
             min-height: 100dvh;
             transition: background 0.5s, color 0.5s;
+            height: 100%;
+            width: 100%;
         }
 
-        /* ── CANVAS BG ── */
-        #bgCanvas {
-            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+        /* ── BOARD BACKGROUND ── */
+        #board {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background-color: #e8d8c4;
+            background-image:
+                radial-gradient(ellipse at 50% 50%, rgba(255, 248, 235, 0.55) 0%, rgba(220, 200, 175, 0) 72%),
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+        }
+        [data-theme="dark"] #board {
+            background-color: #18120c;
+            background-image: radial-gradient(ellipse at 50% 50%, rgba(60, 40, 20, 0.55) 0%, rgba(20, 12, 6, 0) 72%);
+        }
+
+        /* ── VIGNETTE ── */
+        #vignette {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            background: radial-gradient(ellipse at 50% 50%, transparent 48%, rgba(100, 60, 20, 0.16) 100%);
+        }
+        [data-theme="dark"] #vignette {
+            background: radial-gradient(ellipse at 50% 50%, transparent 38%, rgba(0, 0, 0, 0.5) 100%);
+        }
+
+        /* ── STRING LIGHTS ── */
+        #stringLights {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 2;
+            pointer-events: none;
+            height: 70px;
+            overflow: visible;
+            display: none;
+        }
+        #stringLights svg {
+            width: 100%;
+            height: 70px;
+        }
+
+        /* ── CORNER DECORATIONS ── */
+        .corner-deco {
+            position: fixed;
+            pointer-events: none;
+            z-index: 3;
+            display: none;
+        }
+        .corner-deco.bottom-left {
+            bottom: 0;
+            left: 0;
+        }
+        .corner-deco.bottom-right {
+            bottom: 0;
+            right: 0;
+        }
+
+        /* ── SCATTERED DECOS ── */
+        .deco-element {
+            position: fixed;
+            pointer-events: none;
+            z-index: 3;
+            font-family: serif;
+            font-size: 14px;
+            opacity: 0;
+            transition: opacity 0.8s;
+            animation: gentleFloat 4s ease-in-out infinite;
+        }
+        .deco-element.visible {
+            opacity: 0.5;
+        }
+        @keyframes gentleFloat {
+            0%,
+            100% {
+                transform: translateY(0) rotate(var(--r, 0deg));
+            }
+            50% {
+                transform: translateY(-5px) rotate(calc(var(--r, 0deg) + 4deg));
+            }
+        }
+
+        /* ── BALLOONS ── */
+        .balloon {
+            position: fixed;
+            pointer-events: none;
+            z-index: 3;
+            animation: ballFloat 3.5s ease-in-out infinite;
+        }
+        @keyframes ballFloat {
+            0%,
+            100% {
+                transform: translateY(0) rotate(var(--lean, 4deg));
+            }
+            50% {
+                transform: translateY(-14px) rotate(calc(var(--lean, 4deg) * -0.5));
+            }
         }
 
         /* ── LOCK SCREEN ── */
         #lockScreen {
-            position: fixed; inset: 0; z-index: 10000;
+            position: fixed;
+            inset: 0;
+            z-index: 10000;
             background: radial-gradient(ellipse at 50% 40%, #f5e8d8 0%, #e8d4be 50%, #d4b99a 100%);
-            display: flex; align-items: center; justify-content: center;
-            flex-direction: column; gap: 20px; padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
             transition: opacity 1s ease, visibility 1s ease;
         }
-        #lockScreen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+        #lockScreen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
         .lock-card {
-            background: rgba(255,250,242,0.88);
+            background: rgba(255, 250, 242, 0.88);
             backdrop-filter: blur(20px);
-            border: 1.5px solid rgba(180,148,120,0.4);
+            border: 1.5px solid rgba(180, 148, 120, 0.4);
             border-radius: 20px;
             padding: 40px 32px;
-            max-width: 380px; width: 100%;
-            box-shadow: 0 12px 48px rgba(100,60,20,0.12), 0 2px 8px rgba(0,0,0,0.06);
+            max-width: 380px;
+            width: 100%;
+            box-shadow: 0 12px 48px rgba(100, 60, 20, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
             text-align: center;
             position: relative;
         }
         .lock-card::before {
             content: '';
-            position: absolute; inset: 0;
+            position: absolute;
+            inset: 0;
             border-radius: 20px;
             background: var(--paper-noise);
             opacity: 0.6;
             pointer-events: none;
         }
-        .lock-icon { font-size: 3rem; margin-bottom: 10px; }
+        .lock-icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            position: relative;
+        }
         .archive-title {
             font-family: var(--font-dance);
             font-size: clamp(2rem, 5vw, 2.6rem);
             color: #4a2a3a;
             margin-bottom: 6px;
             font-weight: 700;
+            position: relative;
         }
         .lock-subtitle {
             font-family: var(--font-kalam);
@@ -101,119 +225,145 @@
             color: var(--text-soft);
             margin: 0 auto 24px;
             line-height: 1.6;
+            position: relative;
         }
         #accessCode {
-            width: 100%; padding: 14px 20px;
+            width: 100%;
+            padding: 14px 20px;
             font-size: 1.1rem;
-            border: 2px solid rgba(180,148,120,0.4);
+            border: 2px solid rgba(180, 148, 120, 0.4);
             border-radius: 50px;
-            background: rgba(255,252,248,0.8);
+            background: rgba(255, 252, 248, 0.8);
             text-align: center;
             letter-spacing: 4px;
             font-family: monospace;
             transition: all 0.3s ease;
             color: var(--text-primary);
+            position: relative;
         }
-        #accessCode:focus { outline: none; border-color: #b8867e; box-shadow: 0 0 0 4px rgba(184,134,126,0.15); }
+        #accessCode:focus {
+            outline: none;
+            border-color: #b8867e;
+            box-shadow: 0 0 0 4px rgba(184, 134, 126, 0.15);
+        }
         .submit-btn {
-            padding: 14px 42px; font-size: 1.1rem;
+            padding: 14px 42px;
+            font-size: 1.1rem;
             background: linear-gradient(135deg, #c495a5, #b8867e);
-            color: white; border: none; border-radius: 50px;
-            cursor: pointer; font-family: var(--font-dance); font-weight: 700;
-            box-shadow: 0 6px 24px rgba(184,134,126,0.35);
-            transition: all 0.3s ease; margin-top: 14px;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: var(--font-dance);
+            font-weight: 700;
+            box-shadow: 0 6px 24px rgba(184, 134, 126, 0.35);
+            transition: all 0.3s ease;
+            margin-top: 14px;
             letter-spacing: 0.5px;
+            position: relative;
         }
-        .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(184,134,126,0.45); }
-        .status-msg { min-height: 24px; font-size: 0.85rem; margin-top: 10px; font-family: var(--font-kalam); }
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(184, 134, 126, 0.45);
+        }
+        .status-msg {
+            min-height: 24px;
+            font-size: 0.85rem;
+            margin-top: 10px;
+            font-family: var(--font-kalam);
+            position: relative;
+        }
 
         /* ── LOADING ── */
         #loadingScreen {
-            position: fixed; inset: 0; z-index: 9999;
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
             background: radial-gradient(ellipse at center, #fef9f6 0%, #f5e6dc 40%, #ead5c8 100%);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: opacity 0.8s, visibility 0.8s; gap: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s, visibility 0.8s;
+            gap: 20px;
         }
-        #loadingScreen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+        #loadingScreen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
         .loading-spinner {
-            width: 44px; height: 44px;
-            border: 3px solid rgba(180,140,150,0.3);
+            width: 44px;
+            height: 44px;
+            border: 3px solid rgba(180, 140, 150, 0.3);
             border-top-color: #c495a5;
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
 
         /* ── WELCOME ── */
         #welcomeScreen {
-            position: fixed; inset: 0; z-index: 100;
-            display: flex; align-items: center; justify-content: center;
-            flex-direction: column; gap: 16px;
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 16px;
             background: rgba(247, 239, 227, 0.92);
             backdrop-filter: blur(14px);
             transition: opacity 0.8s, visibility 0.8s;
-            text-align: center; padding: 20px;
+            text-align: center;
+            padding: 20px;
         }
-        #welcomeScreen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+        #welcomeScreen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
         .welcome-age {
             font-family: var(--font-dance);
             font-size: clamp(3rem, 7vw, 5rem);
-            color: #b8867e; font-weight: 700;
+            color: #b8867e;
+            font-weight: 700;
         }
         .btn-magical {
             padding: 14px 36px;
-            font-family: var(--font-dance); font-size: 1.25rem; font-weight: 700;
+            font-family: var(--font-dance);
+            font-size: 1.25rem;
+            font-weight: 700;
             background: linear-gradient(135deg, #f0d5e0, #e8c4d4);
-            color: #5c3d4e; border: 2px solid rgba(200,150,170,0.5);
-            border-radius: 50px; cursor: pointer;
-            box-shadow: 0 4px 20px rgba(180,140,160,0.35);
+            color: #5c3d4e;
+            border: 2px solid rgba(200, 150, 170, 0.5);
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(180, 140, 160, 0.35);
             transition: all 0.35s ease;
         }
-        .btn-magical:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(180,140,160,0.5); }
-
-        /* ── SCRAPBOOK DESK ── */
-        #scrapbookDesk {
-            position: relative; z-index: 10;
-            min-height: 100vh; min-height: 100dvh;
-            display: none; pointer-events: auto;
+        .btn-magical:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(180, 140, 160, 0.5);
         }
-        #scrapbookDesk.active { display: block; }
 
-        /* ── BOARD BACKGROUND ── */
-        .board-bg {
-            position: fixed; inset: 0; z-index: 0;
-            background-color: #e8d8c4;
-            background-image:
-                radial-gradient(ellipse at 50% 50%, rgba(255,248,235,0.6) 0%, rgba(220,200,175,0.0) 70%),
-                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+        /* ── DESK HEADER ── */
+        #deskHeader {
+            position: fixed;
+            top: 36px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            z-index: 20;
             pointer-events: none;
+            display: none;
         }
-        [data-theme="dark"] .board-bg {
-            background-color: #18120c;
-            background-image: radial-gradient(ellipse at 50% 50%, rgba(60,40,20,0.6) 0%, rgba(20,12,6,0.0) 70%);
-        }
-
-        /* ── VIGNETTE ── */
-        .board-vignette {
-            position: fixed; inset: 0; z-index: 1; pointer-events: none;
-            background: radial-gradient(ellipse at 50% 50%, transparent 50%, rgba(100,60,20,0.18) 100%);
-        }
-        [data-theme="dark"] .board-vignette {
-            background: radial-gradient(ellipse at 50% 50%, transparent 40%, rgba(0,0,0,0.5) 100%);
-        }
-
-        /* ── STRING LIGHTS ── */
-        .string-lights {
-            position: fixed; top: 0; left: 0; right: 0; z-index: 2; pointer-events: none;
-            height: 80px; overflow: visible;
-        }
-        .string-lights svg { width: 100%; height: 80px; }
-
-        /* ── HEADER AREA ── */
-        .desk-header {
-            position: fixed; top: 36px; left: 0; right: 0;
-            text-align: center; z-index: 20;
-            pointer-events: none;
+        #deskHeader.active {
+            display: block;
         }
         .desk-title {
             font-family: var(--font-dance);
@@ -221,161 +371,151 @@
             color: #3a2040;
             font-weight: 700;
             line-height: 1.05;
-            text-shadow: 0 2px 8px rgba(80,40,20,0.08);
+            text-shadow: 0 2px 8px rgba(80, 40, 20, 0.08);
             letter-spacing: 0.5px;
-            position: relative;
             display: inline-block;
         }
-        [data-theme="dark"] .desk-title { color: #f0e4d0; text-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+        [data-theme="dark"] .desk-title {
+            color: #f0e4d0;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
         .heartbeat-title {
             display: inline-block;
             animation: heartBeatTitle 1.6s ease-in-out infinite;
             color: #d4656b;
-            filter: drop-shadow(0 0 6px rgba(212,101,107,0.5));
+            filter: drop-shadow(0 0 6px rgba(212, 101, 107, 0.5));
         }
         @keyframes heartBeatTitle {
-            0%,100% { transform: scale(1); }
-            7% { transform: scale(1.22); }
-            14% { transform: scale(1); }
-            21% { transform: scale(1.12); }
-            28% { transform: scale(1); }
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            7% {
+                transform: scale(1.22);
+            }
+            14% {
+                transform: scale(1);
+            }
+            21% {
+                transform: scale(1.12);
+            }
+            28% {
+                transform: scale(1);
+            }
         }
         .desk-subtitle {
-            display: flex; align-items: center; justify-content: center; gap: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
             font-family: var(--font-kalam);
             font-size: clamp(0.8rem, 1.6vw, 1rem);
             color: var(--text-soft);
             margin-top: 2px;
         }
         .subtitle-line {
-            display: inline-block; width: 40px; height: 1px;
+            display: inline-block;
+            width: 40px;
+            height: 1px;
             background: linear-gradient(90deg, transparent, var(--rose-gold), transparent);
         }
         .progress-indicator {
-            font-family: var(--font-kalam); font-size: 0.72rem;
-            color: var(--text-soft); opacity: 0;
-            transition: opacity 0.6s; margin-top: 1px;
+            font-family: var(--font-kalam);
+            font-size: 0.72rem;
+            color: var(--text-soft);
+            opacity: 0;
+            transition: opacity 0.6s;
+            margin-top: 1px;
             letter-spacing: 0.3px;
         }
-        .progress-indicator.visible { opacity: 0.85; }
+        .progress-indicator.visible {
+            opacity: 0.85;
+        }
 
         /* ── CARDS AREA ── */
-        .cards-area {
-            position: fixed; inset: 0; z-index: 10;
+        #cardsArea {
+            position: fixed;
+            inset: 0;
+            z-index: 10;
             touch-action: manipulation;
         }
 
-        /* ── CORNER DECORATIONS ── */
-        .corner-deco {
-            position: fixed; pointer-events: none; z-index: 3;
-        }
-        .corner-deco.bottom-left { bottom: 0; left: 0; }
-        .corner-deco.bottom-right { bottom: 0; right: 0; }
-
-        /* ── SCATTERED HEARTS & STARS (static deco) ── */
-        .deco-element {
-            position: fixed; pointer-events: none; z-index: 3;
-            font-size: 14px; opacity: 0.55;
-            animation: gentleFloat 4s ease-in-out infinite;
-        }
-        @keyframes gentleFloat {
-            0%,100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-4px) rotate(3deg); }
-        }
-
-        /* ── TAPE PIECE ── */
-        .tape-piece {
-            position: absolute; z-index: 25; pointer-events: none;
-            border-radius: 1px; opacity: 0.72;
-            transform-origin: center center;
-        }
-        /* Washi tape styles */
-        .tape-polka {
-            background: rgba(255,180,190,0.55);
-            background-image: radial-gradient(circle, rgba(255,255,255,0.5) 2px, transparent 2px);
-            background-size: 7px 7px;
-            border: 1px solid rgba(255,160,175,0.3);
-        }
-        .tape-gingham {
-            background: rgba(150,190,240,0.55);
-            background-image: repeating-linear-gradient(0deg, rgba(255,255,255,0.25) 0px, rgba(255,255,255,0.25) 3px, transparent 3px, transparent 6px),
-                repeating-linear-gradient(90deg, rgba(255,255,255,0.25) 0px, rgba(255,255,255,0.25) 3px, transparent 3px, transparent 6px);
-            border: 1px solid rgba(130,170,220,0.35);
-        }
-        .tape-solid {
-            background: rgba(255,210,120,0.6);
-            border: 1px solid rgba(220,180,80,0.3);
-        }
-        .tape-stripe {
-            background: rgba(200,160,210,0.55);
-            background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.25) 0px, rgba(255,255,255,0.25) 2px, transparent 2px, transparent 6px);
-            border: 1px solid rgba(180,140,195,0.3);
-        }
-
-        /* ── PAPER CARD ── */
+        /* ── POLAROID ── */
         .paper-card {
             position: absolute;
-            cursor: grab; z-index: 10;
-            will-change: transform; transition: box-shadow 0.2s;
-            backface-visibility: hidden; touch-action: none;
+            cursor: grab;
+            will-change: transform;
+            backface-visibility: hidden;
+            touch-action: none;
+            transition: box-shadow 0.2s;
         }
-        .paper-card:active { cursor: grabbing; }
-        .paper-card.dragging { z-index: 999 !important; }
-
-        /* ── POLAROID ── */
+        .paper-card:active {
+            cursor: grabbing;
+        }
+        .paper-card.dragging {
+            z-index: 999 !important;
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.22), 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+        }
         .paper-card.polaroid {
             background: #fafaf2;
             border-radius: 3px;
             padding: 7px 7px 18px 7px;
-            max-width: 140px; min-width: 90px;
-            border: 1px solid rgba(210,200,185,0.5);
+            border: 1px solid rgba(210, 200, 185, 0.5);
             text-align: center;
-            box-shadow:
-                0 1px 2px rgba(0,0,0,0.07),
-                0 4px 12px rgba(0,0,0,0.09),
-                0 8px 24px rgba(0,0,0,0.06),
-                inset 0 0 0 1px rgba(255,255,255,0.7);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.07), 0 4px 12px rgba(0, 0, 0, 0.09), 0 8px 24px rgba(0, 0, 0, 0.06), inset 0 0 0 1px rgba(255, 255, 255, 0.7);
         }
         [data-theme="dark"] .paper-card.polaroid {
-            background: #2d2520; border-color: rgba(120,100,80,0.4);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(80,60,40,0.4);
+            background: #2d2520;
+            border-color: rgba(120, 100, 80, 0.4);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), inset 0 0 0 1px rgba(80, 60, 40, 0.4);
         }
-        .paper-card.polaroid::before {
-            content: ''; position: absolute; inset: 0; border-radius: 3px;
-            background: var(--paper-noise); opacity: 0.5; pointer-events: none;
+        .paper-card.polaroid.main-photo {
+            padding: 8px 8px 20px 8px;
+            z-index: 14 !important;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08), 0 6px 20px rgba(0, 0, 0, 0.12), 0 12px 36px rgba(0, 0, 0, 0.08), inset 0 0 0 1px rgba(255, 255, 255, 0.7);
         }
         .polaroid-photo {
-            width: 100%; aspect-ratio: 4/5;
-            border-radius: 2px; overflow: hidden;
+            width: 100%;
+            aspect-ratio: 4/5;
+            border-radius: 2px;
+            overflow: hidden;
             background: linear-gradient(135deg, #e8ddd4, #d8ccc0);
             cursor: pointer;
-            box-shadow: inset 0 0 0 1px rgba(0,0,0,0.06);
+            box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06);
         }
-        .polaroid-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .polaroid-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
         .polaroid-caption {
             font-family: var(--font-kalam);
-            font-size: 0.56rem; color: #8a7060;
-            margin-top: 4px; font-weight: 400;
-            line-height: 1.3; letter-spacing: 0.1px;
+            font-size: 0.56rem;
+            color: #8a7060;
+            margin-top: 4px;
+            font-weight: 400;
+            line-height: 1.3;
+            letter-spacing: 0.1px;
         }
-        [data-theme="dark"] .polaroid-caption { color: #b8a090; }
-        .paper-card.polaroid.main-photo {
-            max-width: 155px; padding: 8px 8px 20px 8px; z-index: 14;
-            box-shadow:
-                0 2px 4px rgba(0,0,0,0.08),
-                0 6px 20px rgba(0,0,0,0.12),
-                0 12px 36px rgba(0,0,0,0.08),
-                inset 0 0 0 1px rgba(255,255,255,0.7);
+        [data-theme="dark"] .polaroid-caption {
+            color: #b8a090;
         }
-        .paper-card.polaroid.main-photo .polaroid-caption { font-size: 0.62rem; }
+        .paper-card.polaroid.main-photo .polaroid-caption {
+            font-size: 0.62rem;
+        }
 
         /* ── PUSH PIN ── */
         .push-pin {
-            position: absolute; width: 16px; height: 16px;
-            z-index: 30; pointer-events: none; cursor: default;
-            top: -7px; left: 50%; transform: translateX(-50%);
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            z-index: 30;
+            pointer-events: none;
+            top: -7px;
+            left: 50%;
+            transform: translateX(-50%);
         }
-        .push-pin svg { width: 16px; height: 16px; }
 
         /* ── STICKY NOTES ── */
         .paper-card.note {
@@ -385,282 +525,530 @@
             font-size: 0.72rem;
             line-height: 1.45;
             text-align: center;
-            min-width: 80px; max-width: 120px;
-            z-index: 6;
+            z-index: 6 !important;
             font-weight: 400;
             position: relative;
         }
         .note-yellow {
             background: var(--sticky-yellow);
-            border: 1px solid rgba(200,190,100,0.35);
+            border: 1px solid rgba(200, 190, 100, 0.35);
             color: #5a4820;
-            box-shadow: 2px 3px 8px rgba(0,0,0,0.09), 0 1px 3px rgba(0,0,0,0.05);
+            box-shadow: 2px 3px 8px rgba(0, 0, 0, 0.09), 0 1px 3px rgba(0, 0, 0, 0.05);
         }
         .note-pink {
             background: var(--sticky-pink);
-            border: 1px solid rgba(220,160,180,0.35);
+            border: 1px solid rgba(220, 160, 180, 0.35);
             color: #5a2838;
-            box-shadow: 2px 3px 8px rgba(0,0,0,0.09), 0 1px 3px rgba(0,0,0,0.05);
+            box-shadow: 2px 3px 8px rgba(0, 0, 0, 0.09), 0 1px 3px rgba(0, 0, 0, 0.05);
         }
         .note-blue {
             background: var(--sticky-blue);
-            border: 1px solid rgba(140,180,220,0.35);
+            border: 1px solid rgba(140, 180, 220, 0.35);
             color: #1a3454;
-            box-shadow: 2px 3px 8px rgba(0,0,0,0.09), 0 1px 3px rgba(0,0,0,0.05);
+            box-shadow: 2px 3px 8px rgba(0, 0, 0, 0.09), 0 1px 3px rgba(0, 0, 0, 0.05);
         }
-        /* Grid lines on some notes */
         .note-grid::before {
-            content: ''; position: absolute; inset: 0;
-            background-image: repeating-linear-gradient(
-                transparent,
-                transparent 14px,
-                rgba(150,180,210,0.18) 14px,
-                rgba(150,180,210,0.18) 15px
-            );
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: repeating-linear-gradient(transparent,
+                    transparent 14px,
+                    rgba(150, 180, 210, 0.18) 14px,
+                    rgba(150, 180, 210, 0.18) 15px);
             border-radius: 3px;
             pointer-events: none;
         }
-        /* Torn edge effect */
         .note-torn {
             clip-path: polygon(0 0, 100% 0, 100% 85%, 96% 87%, 92% 85%, 88% 88%, 83% 84%, 78% 88%, 73% 85%, 68% 88%, 62% 85%, 56% 89%, 50% 86%, 44% 89%, 38% 85%, 32% 88%, 27% 84%, 22% 87%, 16% 83%, 10% 87%, 5% 84%, 0 87%);
         }
-        /* Paper clip SVG */
         .paper-clip {
-            position: absolute; top: -14px; right: 14px;
-            z-index: 30; pointer-events: none;
+            position: absolute;
+            top: -14px;
+            right: 14px;
+            z-index: 30;
+            pointer-events: none;
         }
-        .note-heart { 
-            display: block; text-align: center;
-            font-size: 0.8rem; margin-top: 3px; opacity: 0.75;
+        .note-heart {
+            display: block;
+            text-align: center;
+            font-size: 0.8rem;
+            margin-top: 3px;
+            opacity: 0.75;
         }
 
         /* ── VIEWED BADGE ── */
         .paper-card.viewed::after {
             content: '✓';
-            position: absolute; top: 3px; right: 3px;
+            position: absolute;
+            top: 3px;
+            right: 3px;
             font-size: 0.38rem;
-            background: rgba(184,134,126,0.9);
-            color: #fff; padding: 1px 5px;
-            border-radius: 20px; z-index: 5;
+            background: rgba(184, 134, 126, 0.9);
+            color: #fff;
+            padding: 1px 5px;
+            border-radius: 20px;
+            z-index: 5;
             pointer-events: none;
             animation: badgeFade 0.4s ease forwards;
-            font-family: var(--font-body); font-weight: 600;
+            font-family: var(--font-body);
+            font-weight: 600;
         }
         @keyframes badgeFade {
-            from { opacity: 0; transform: scale(0.7); }
-            to { opacity: 1; transform: scale(1); }
+            from {
+                opacity: 0;
+                transform: scale(0.7);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* ── TAPE ── */
+        .tape-piece {
+            position: absolute;
+            z-index: 25;
+            pointer-events: none;
+            border-radius: 1px;
+            opacity: 0.72;
+            transform-origin: center center;
+        }
+        .tape-polka {
+            background: rgba(255, 180, 190, 0.55);
+            background-image: radial-gradient(circle, rgba(255, 255, 255, 0.5) 2px, transparent 2px);
+            background-size: 7px 7px;
+            border: 1px solid rgba(255, 160, 175, 0.3);
+        }
+        .tape-gingham {
+            background: rgba(150, 190, 240, 0.55);
+            background-image: repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.25) 0px, rgba(255, 255, 255, 0.25) 3px, transparent 3px, transparent 6px),
+                repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.25) 0px, rgba(255, 255, 255, 0.25) 3px, transparent 3px, transparent 6px);
+            border: 1px solid rgba(130, 170, 220, 0.35);
+        }
+        .tape-solid {
+            background: rgba(255, 210, 120, 0.6);
+            border: 1px solid rgba(220, 180, 80, 0.3);
+        }
+        .tape-stripe {
+            background: rgba(200, 160, 210, 0.55);
+            background-image: repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.25) 0px, rgba(255, 255, 255, 0.25) 2px, transparent 2px, transparent 6px);
+            border: 1px solid rgba(180, 140, 195, 0.3);
         }
 
         /* ── LOCKED CARD ── */
         .locked-card {
-            position: absolute; z-index: 8;
-            border-radius: 8px; padding: 16px 14px;
-            text-align: center; cursor: not-allowed;
-            transition: all 0.6s ease; opacity: 0.9;
-            min-width: 108px; max-width: 145px;
+            position: absolute;
+            z-index: 8;
+            border-radius: 8px;
+            padding: 16px 14px;
+            text-align: center;
+            cursor: not-allowed;
+            transition: all 0.6s ease;
+            opacity: 0.9;
             pointer-events: none;
             background: #fdf7ec;
             border: 2.5px dashed #c4a880;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
         }
-        [data-theme="dark"] .locked-card { background: #2a2010; border-color: #6b5a30; }
-        .locked-card::before {
-            content: ''; position: absolute; inset: 0;
-            border-radius: 6px; background: var(--paper-noise);
-            pointer-events: none;
-        }
-        /* Arrow pointers to locked card */
-        .arrow-pointer {
-            position: absolute; z-index: 7; pointer-events: none;
-            font-size: 16px; opacity: 0.55;
-            animation: arrowPulse 2s ease-in-out infinite;
-        }
-        @keyframes arrowPulse {
-            0%,100% { transform: scale(1) rotate(var(--r,0deg)); opacity: 0.5; }
-            50% { transform: scale(1.15) rotate(var(--r,0deg)); opacity: 0.8; }
+        [data-theme="dark"] .locked-card {
+            background: #2a2010;
+            border-color: #6b5a30;
         }
         .locked-card.unlocked {
-            border: 2.5px solid #c9a87c; cursor: pointer;
-            opacity: 1; pointer-events: auto;
+            border: 2.5px solid #c9a87c;
+            cursor: pointer;
+            opacity: 1;
+            pointer-events: auto;
             animation: unlockGlow 2s ease-in-out infinite;
         }
         @keyframes unlockGlow {
-            0%,100% { box-shadow: 0 0 16px rgba(200,160,120,0.3), 0 4px 16px rgba(0,0,0,0.08); }
-            50% { box-shadow: 0 0 40px rgba(200,160,120,0.65), 0 0 70px rgba(200,160,120,0.2), 0 4px 20px rgba(0,0,0,0.1); }
+            0%,
+            100% {
+                box-shadow: 0 0 16px rgba(200, 160, 120, 0.3), 0 4px 16px rgba(0, 0, 0, 0.08);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(200, 160, 120, 0.65), 0 0 70px rgba(200, 160, 120, 0.2), 0 4px 20px rgba(0, 0, 0, 0.1);
+            }
         }
         @keyframes shakeUnlock {
-            0%,100% { transform: translateX(0) rotate(-1.5deg); }
-            20% { transform: translateX(-5px) rotate(-2.5deg); }
-            40% { transform: translateX(5px) rotate(-0.5deg); }
-            60% { transform: translateX(-3px) rotate(-2deg); }
-            80% { transform: translateX(3px) rotate(-1deg); }
+            0%,
+            100% {
+                transform: translateX(0) rotate(-1.5deg);
+            }
+            20% {
+                transform: translateX(-5px) rotate(-2.5deg);
+            }
+            40% {
+                transform: translateX(5px) rotate(-0.5deg);
+            }
+            60% {
+                transform: translateX(-3px) rotate(-2deg);
+            }
+            80% {
+                transform: translateX(3px) rotate(-1deg);
+            }
         }
-        .locked-card.shaking { animation: shakeUnlock 0.6s ease forwards; }
-        .locked-icon { font-size: 1.8rem; display: block; margin-bottom: 4px; }
-        .locked-label { font-family: var(--font-dance); font-size: 0.85rem; color: var(--text-primary); font-weight: 700; }
-        .locked-sub { font-family: var(--font-kalam); font-size: 0.5rem; color: var(--text-soft); margin-top: 3px; display: block; }
+        .locked-card.shaking {
+            animation: shakeUnlock 0.6s ease forwards;
+        }
+        .locked-icon {
+            font-size: 1.8rem;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .locked-label {
+            font-family: var(--font-dance);
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+        .locked-sub {
+            font-family: var(--font-kalam);
+            font-size: 0.5rem;
+            color: var(--text-soft);
+            margin-top: 3px;
+            display: block;
+        }
+
+        /* ── ARROW POINTERS ── */
+        .arrow-pointer {
+            position: absolute;
+            z-index: 7;
+            pointer-events: none;
+            font-family: serif;
+            font-size: 18px;
+            opacity: 0;
+            transition: opacity 0.8s;
+            animation: arrowPulse 2s ease-in-out infinite;
+        }
+        .arrow-pointer.show {
+            opacity: 0.55;
+        }
+        @keyframes arrowPulse {
+            0%,
+            100% {
+                transform: scale(1) rotate(var(--r, 0deg));
+                opacity: 0.5;
+            }
+            50% {
+                transform: scale(1.15) rotate(var(--r, 0deg));
+                opacity: 0.8;
+            }
+        }
 
         /* ── TOAST ── */
-        .toast-container { position: fixed; top: 28px; left: 50%; transform: translateX(-50%); z-index: 700; pointer-events: none; }
-        .memory-toast {
-            background: rgba(255,250,242,0.9); backdrop-filter: blur(14px);
-            border: 1px solid rgba(200,170,140,0.5); border-radius: 20px;
-            padding: 10px 22px; color: var(--text-primary);
-            font-family: var(--font-kalam); font-size: 0.9rem; text-align: center;
-            font-weight: 700; opacity: 0; transition: opacity 0.4s ease, transform 0.4s ease;
-            transform: translateY(-10px); white-space: nowrap;
-            box-shadow: 0 4px 20px rgba(100,60,20,0.12);
+        #toastContainer {
+            position: fixed;
+            top: 28px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 700;
+            pointer-events: none;
         }
-        .memory-toast.show { opacity: 1; transform: translateY(0); }
+        .memory-toast {
+            background: rgba(255, 250, 242, 0.9);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(200, 170, 140, 0.5);
+            border-radius: 20px;
+            padding: 10px 22px;
+            color: var(--text-primary);
+            font-family: var(--font-kalam);
+            font-size: 0.9rem;
+            text-align: center;
+            font-weight: 700;
+            opacity: 0;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            transform: translateY(-10px);
+            white-space: nowrap;
+            box-shadow: 0 4px 20px rgba(100, 60, 20, 0.12);
+        }
+        .memory-toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
         /* ── LIGHTBOX ── */
         .lightbox {
-            position: fixed; inset: 0; z-index: 550;
-            display: flex; align-items: center; justify-content: center;
-            opacity: 0; visibility: hidden; transition: opacity 0.4s, visibility 0.4s;
+            position: fixed;
+            inset: 0;
+            z-index: 550;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s, visibility 0.4s;
             cursor: pointer;
         }
-        .lightbox.active { opacity: 1; visibility: visible; }
+        .lightbox.active {
+            opacity: 1;
+            visibility: visible;
+        }
         .lightbox-overlay {
-            position: absolute; inset: 0;
-            background: rgba(20,12,6,0.65);
-            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            position: absolute;
+            inset: 0;
+            background: rgba(20, 12, 6, 0.65);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
         }
         .lightbox-content {
-            position: relative; max-width: 85vw; max-height: 85vh;
-            border-radius: 4px; overflow: visible;
-            box-shadow: 0 0 80px rgba(200,160,180,0.4), 0 20px 60px rgba(0,0,0,0.4);
-            transform-origin: center center; will-change: transform, opacity;
-            background: #fafaf2; padding: 10px 10px 32px 10px;
+            position: relative;
+            max-width: 85vw;
+            max-height: 85vh;
+            border-radius: 4px;
+            overflow: visible;
+            box-shadow: 0 0 80px rgba(200, 160, 180, 0.4), 0 20px 60px rgba(0, 0, 0, 0.4);
+            transform-origin: center center;
+            will-change: transform, opacity;
+            background: #fafaf2;
+            padding: 10px 10px 32px 10px;
         }
         .lightbox-content img {
-            display: block; max-width: 75vw; max-height: 72vh;
-            border-radius: 2px; object-fit: contain;
+            display: block;
+            max-width: 75vw;
+            max-height: 72vh;
+            border-radius: 2px;
+            object-fit: contain;
         }
         .lightbox-caption {
-            position: absolute; bottom: 6px; left: 50%;
+            position: absolute;
+            bottom: 6px;
+            left: 50%;
             transform: translateX(-50%);
-            color: #8a7060; font-family: var(--font-kalam); font-size: 0.75rem;
-            white-space: nowrap; font-weight: 400;
-            animation: captionFade 0.6s ease; pointer-events: none;
+            color: #8a7060;
+            font-family: var(--font-kalam);
+            font-size: 0.75rem;
+            white-space: nowrap;
+            font-weight: 400;
+            animation: captionFade 0.6s ease;
+            pointer-events: none;
         }
         @keyframes captionFade {
-            from { opacity: 0; transform: translateX(-50%) translateY(6px); }
-            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(6px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
         }
 
         /* ── SPARKLES ── */
         .sparkle {
-            position: fixed; pointer-events: none; z-index: 600;
-            font-size: 18px; animation: sparkleFly 2.2s linear forwards;
+            position: fixed;
+            pointer-events: none;
+            z-index: 600;
+            font-size: 18px;
+            animation: sparkleFly 2.2s linear forwards;
         }
         @keyframes sparkleFly {
-            0% { opacity: 1; transform: translateY(0) scale(1); }
-            100% { opacity: 0; transform: translateY(-120px) scale(0.1); }
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-120px) scale(0.1);
+            }
         }
 
         /* ── CINEMATIC OVERLAY ── */
         .cinematic-overlay {
-            position: fixed; inset: 0; z-index: 800;
-            background: rgba(240,230,215,0.78);
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            display: flex; align-items: center; justify-content: center;
-            flex-direction: column; opacity: 0; visibility: hidden;
-            transition: opacity 0.8s, visibility 0.8s; padding: 24px; gap: 16px;
+            position: fixed;
+            inset: 0;
+            z-index: 800;
+            background: rgba(240, 230, 215, 0.78);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.8s, visibility 0.8s;
+            padding: 24px;
+            gap: 16px;
         }
-        [data-theme="dark"] .cinematic-overlay { background: rgba(18,12,6,0.82); }
-        .cinematic-overlay.active { opacity: 1; visibility: visible; }
+        [data-theme="dark"] .cinematic-overlay {
+            background: rgba(18, 12, 6, 0.82);
+        }
+        .cinematic-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
         .scrapbook-note {
             background-color: #fdf8ee;
-            background-image: repeating-linear-gradient(
-                transparent, transparent 22px,
-                rgba(180,200,220,0.15) 22px, rgba(180,200,220,0.15) 23px
-            ), var(--paper-noise);
+            background-image: repeating-linear-gradient(transparent,
+                    transparent 22px,
+                    rgba(180, 200, 220, 0.15) 22px,
+                    rgba(180, 200, 220, 0.15) 23px),
+                var(--paper-noise);
             border: 1px solid #d6c7a8;
             border-radius: 3px;
-            box-shadow: 3px 4px 12px rgba(0,0,0,0.1), 0 0 0 1px rgba(180,160,120,0.15);
+            box-shadow: 3px 4px 12px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(180, 160, 120, 0.15);
             padding: 34px 28px;
-            max-width: 480px; width: 100%;
-            text-align: center; position: relative;
+            max-width: 480px;
+            width: 100%;
+            text-align: center;
+            position: relative;
             transform: rotate(0.3deg);
         }
-        [data-theme="dark"] .scrapbook-note { background-color: #2a2210; border-color: #5a4a28; }
+        [data-theme="dark"] .scrapbook-note {
+            background-color: #2a2210;
+            border-color: #5a4a28;
+        }
         .scrapbook-note .handwritten-heading {
-            font-family: var(--font-dance); font-size: 1.8rem;
-            margin-bottom: 14px; color: #4a2a3a; line-height: 1.3;
-            display: block; font-weight: 700;
+            font-family: var(--font-dance);
+            font-size: 1.8rem;
+            margin-bottom: 14px;
+            color: #4a2a3a;
+            line-height: 1.3;
+            display: block;
+            font-weight: 700;
         }
-        [data-theme="dark"] .scrapbook-note .handwritten-heading { color: #f0d8c0; }
-        .scrapbook-note p, .scrapbook-note .body-text {
-            font-family: var(--font-kalam); font-size: 0.95rem;
-            color: #5a4030; line-height: 1.85; letter-spacing: 0.1px;
+        [data-theme="dark"] .scrapbook-note .handwritten-heading {
+            color: #f0d8c0;
         }
-        [data-theme="dark"] .scrapbook-note p, [data-theme="dark"] .scrapbook-note .body-text { color: #d0b898; }
+        .scrapbook-note p,
+        .scrapbook-note .body-text {
+            font-family: var(--font-kalam);
+            font-size: 0.95rem;
+            color: #5a4030;
+            line-height: 1.85;
+            letter-spacing: 0.1px;
+        }
+        [data-theme="dark"] .scrapbook-note p,
+        [data-theme="dark"] .scrapbook-note .body-text {
+            color: #d0b898;
+        }
         .scrapbook-btn {
-            margin-top: 20px; padding: 10px 28px;
-            font-family: var(--font-dance); font-size: 1.05rem; font-weight: 700;
-            background: rgba(255,250,240,0.6); backdrop-filter: blur(4px);
-            border: 1.5px solid #c9a87c; color: #9b7a50;
-            border-radius: 50px; cursor: pointer; letter-spacing: 0.3px;
+            margin-top: 20px;
+            padding: 10px 28px;
+            font-family: var(--font-dance);
+            font-size: 1.05rem;
+            font-weight: 700;
+            background: rgba(255, 250, 240, 0.6);
+            backdrop-filter: blur(4px);
+            border: 1.5px solid #c9a87c;
+            color: #9b7a50;
+            border-radius: 50px;
+            cursor: pointer;
+            letter-spacing: 0.3px;
             transition: all 0.35s ease;
         }
-        [data-theme="dark"] .scrapbook-btn { color: #d8b880; border-color: #a08050; background: rgba(60,45,20,0.4); }
-        .scrapbook-btn:hover { background: rgba(200,160,100,0.18); box-shadow: 0 0 20px rgba(200,160,100,0.25); }
+        [data-theme="dark"] .scrapbook-btn {
+            color: #d8b880;
+            border-color: #a08050;
+            background: rgba(60, 45, 20, 0.4);
+        }
+        .scrapbook-btn:hover {
+            background: rgba(200, 160, 100, 0.18);
+            box-shadow: 0 0 20px rgba(200, 160, 100, 0.25);
+        }
 
         /* ── THEME TOGGLE ── */
         .theme-toggle {
-            position: fixed; top: 18px; right: 18px; z-index: 401;
-            background: rgba(255,250,240,0.75); backdrop-filter: blur(12px);
-            border: 1px solid rgba(180,150,120,0.4);
-            border-radius: 50%; width: 38px; height: 38px;
-            font-size: 1.1rem; cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 2px 12px rgba(80,40,10,0.12);
+            position: fixed;
+            top: 18px;
+            right: 18px;
+            z-index: 401;
+            background: rgba(255, 250, 240, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(180, 150, 120, 0.4);
+            border-radius: 50%;
+            width: 38px;
+            height: 38px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 12px rgba(80, 40, 10, 0.12);
             transition: all 0.3s ease;
         }
-        .theme-toggle:hover { transform: scale(1.06); }
+        .theme-toggle:hover {
+            transform: scale(1.06);
+        }
 
         /* ── INTRO SCREEN ── */
         #introScreen {
-            position: fixed; inset: 0; z-index: 900;
-            display: flex; align-items: center; justify-content: center;
+            position: fixed;
+            inset: 0;
+            z-index: 900;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             background: radial-gradient(ellipse at center, #1a1018 0%, #0d080c 100%);
-            opacity: 0; transition: opacity 0.7s;
+            opacity: 0;
+            transition: opacity 0.7s;
         }
         .typewriter-text {
-            font-family: var(--font-dance); font-size: clamp(1.4rem,3.5vw,2rem);
-            color: #f0e0e4; text-align: center; line-height: 2;
-            max-width: 560px; padding: 20px; font-weight: 500;
+            font-family: var(--font-dance);
+            font-size: clamp(1.4rem, 3.5vw, 2rem);
+            color: #f0e0e4;
+            text-align: center;
+            line-height: 2;
+            max-width: 560px;
+            padding: 20px;
+            font-weight: 500;
             white-space: pre-line;
         }
 
         /* ── RESPONSIVE ── */
         @media (max-width: 600px) {
-            .paper-card.polaroid { max-width: 95px; padding: 4px 4px 12px; }
-            .paper-card.polaroid.main-photo { max-width: 110px; }
-            .polaroid-caption { font-size: 0.46rem; }
-            .paper-card.note { max-width: 90px; font-size: 0.62rem; padding: 7px 7px 7px 10px; }
-            .locked-card { max-width: 108px; padding: 12px 10px; }
-            .desk-title { font-size: 1.8rem; }
-            .lightbox-caption { font-size: 0.65rem; bottom: 4px; white-space: normal; max-width: 90vw; text-align: center; }
-            .scrapbook-note { padding: 22px 16px; }
-            .scrapbook-note .handwritten-heading { font-size: 1.4rem; }
+            .paper-card.polaroid {
+                padding: 4px 4px 12px;
+            }
+            .paper-card.polaroid.main-photo {
+                padding: 5px 5px 14px;
+            }
+            .polaroid-caption {
+                font-size: 0.46rem;
+            }
+            .paper-card.note {
+                font-size: 0.62rem;
+                padding: 7px 7px 7px 10px;
+            }
+            .locked-card {
+                padding: 12px 10px;
+            }
+            .desk-title {
+                font-size: 1.8rem;
+            }
+            .lightbox-caption {
+                font-size: 0.65rem;
+                bottom: 4px;
+                white-space: normal;
+                max-width: 90vw;
+                text-align: center;
+            }
+            .scrapbook-note {
+                padding: 22px 16px;
+            }
+            .scrapbook-note .handwritten-heading {
+                font-size: 1.4rem;
+            }
+            .lock-card {
+                padding: 28px 20px;
+            }
         }
     </style>
 </head>
 <body data-theme="light">
-    <div class="board-bg"></div>
-    <div class="board-vignette"></div>
 
-    <div class="toast-container" id="toastContainer"></div>
+    <div id="board"></div>
+    <div id="vignette"></div>
+    <div id="toastContainer"></div>
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌙</button>
 
     <!-- String Lights -->
-    <div class="string-lights" id="stringLights" style="display:none;"></div>
+    <div id="stringLights"></div>
 
     <!-- Corner Decorations -->
-    <div class="corner-deco bottom-left" id="cornerDecoLeft" style="display:none;"></div>
-    <div class="corner-deco bottom-right" id="cornerDecoRight" style="display:none;"></div>
+    <div class="corner-deco bottom-left" id="cornerDecoLeft"></div>
+    <div class="corner-deco bottom-right" id="cornerDecoRight"></div>
 
     <!-- Lock Screen -->
     <div id="lockScreen">
@@ -689,22 +1077,21 @@
         <button class="btn-magical" id="openScrapbookBtn">✨ Open the Scrapbook</button>
     </div>
 
-    <!-- Scrapbook Desk -->
-    <div id="scrapbookDesk">
-        <div class="desk-header" id="deskHeader">
-            <div class="desk-title">For Ms. Nain <span class="heartbeat-title">❤️</span></div>
-            <div class="desk-subtitle">
-                <span class="subtitle-line"></span>
-                A Small Collection of Memories
-                <span class="subtitle-line"></span>
-            </div>
-            <div class="progress-indicator" id="progressIndicator"></div>
+    <!-- Desk Header -->
+    <div id="deskHeader">
+        <div class="desk-title">For Ms. Nain <span class="heartbeat-title">❤️</span></div>
+        <div class="desk-subtitle">
+            <span class="subtitle-line"></span>
+            A Small Collection of Memories
+            <span class="subtitle-line"></span>
         </div>
-
-        <div class="cards-area" id="cardsArea"></div>
+        <div class="progress-indicator" id="progressIndicator"></div>
     </div>
 
-    <!-- Photo Viewer -->
+    <!-- Cards Area -->
+    <div id="cardsArea"></div>
+
+    <!-- Lightbox -->
     <div class="lightbox" id="lightbox">
         <div class="lightbox-overlay"></div>
         <div class="lightbox-content" id="lightboxContent">
@@ -721,196 +1108,199 @@
     </div>
 
     <script>
-    (function() {
-        const PASSWORD = 'NEHA2307';
+        (function() {
+            const PASSWORD = 'NEHA2307';
 
-        const memoryData = [
-            { src: 'IMAGES/1.jpg', caption: 'The smile I noticed first ❤️' },
-            { src: 'IMAGES/2.jpg', caption: 'One of my favorite pictures of you ✨' },
-            { src: 'IMAGES/3.jpg', caption: 'A moment worth remembering 🌸' },
-            { src: 'IMAGES/4.jpg', caption: 'This photo always makes me smile 💖' },
-            { src: 'IMAGES/5.jpg', caption: 'And this is where the archive ends ⭐' },
-        ];
+            const memoryData = [
+                { src: 'IMAGES/1.jpg', caption: 'The smile I noticed first ❤️' },
+                { src: 'IMAGES/2.jpg', caption: 'One of my favorite pictures of you ✨' },
+                { src: 'IMAGES/3.jpg', caption: 'A moment worth remembering 🌸' },
+                { src: 'IMAGES/4.jpg', caption: 'This photo always makes me smile 💖' },
+                { src: 'IMAGES/5.jpg', caption: 'And this is where the archive ends ⭐' },
+            ];
 
-        // Each note: message, style, optional extras
-        const noteData = [
-            { msg: '23 looks beautiful\non you', style: 'note-pink note-torn', heart: true },
-            { msg: 'Keep Smiling', style: 'note-blue note-grid', clip: true },
-            { msg: 'You make ordinary moments special ✨', style: 'note-yellow', heart: true },
-            { msg: 'Some people make life brighter without trying', style: 'note-yellow note-grid', heart: false },
-        ];
+            const noteData = [
+                { msg: '23 looks beautiful\non you', style: 'note-pink note-torn', heart: true, clip: false },
+                { msg: 'Keep Smiling', style: 'note-blue note-grid', heart: false, clip: true },
+                { msg: 'You make ordinary moments special ✨', style: 'note-yellow', heart: true, clip: false },
+                { msg: 'Some people make life brighter without trying', style: 'note-yellow note-grid',
+                heart: false, clip: false },
+            ];
 
-        const placeholderSVG = () => `data:image/svg+xml,${encodeURIComponent(
+            const placeholderSVG = () => `data:image/svg+xml,${encodeURIComponent(
             `<svg xmlns='http://www.w3.org/2000/svg' width='200' height='250'><rect fill='#f0e6dc' width='200' height='250'/><text x='100' y='120' text-anchor='middle' font-size='32'>📷</text><text x='100' y='155' text-anchor='middle' font-family='Georgia' font-size='11' fill='rgba(100,70,60,0.4)'>Memory</text></svg>`
         )}`;
 
-        // DOM refs
-        const lockScreen = document.getElementById('lockScreen');
-        const passInput = document.getElementById('accessCode');
-        const submitBtn = document.getElementById('submitAccess');
-        const statusMsg = document.getElementById('statusMsg');
-        const loadingScreen = document.getElementById('loadingScreen');
-        const welcomeScreen = document.getElementById('welcomeScreen');
-        const scrapbookDesk = document.getElementById('scrapbookDesk');
-        const cardsArea = document.getElementById('cardsArea');
-        const progressIndicator = document.getElementById('progressIndicator');
-        const lightbox = document.getElementById('lightbox');
-        const lightboxImg = document.getElementById('lightboxImg');
-        const lightboxContent = document.getElementById('lightboxContent');
-        const cinematicOverlay = document.getElementById('cinematicOverlay');
-        const cinematicText = document.getElementById('cinematicText');
-        const cinematicBtn = document.getElementById('cinematicBtn');
-        const themeToggle = document.getElementById('themeToggle');
-        const stringLights = document.getElementById('stringLights');
-        const cornerLeft = document.getElementById('cornerDecoLeft');
-        const cornerRight = document.getElementById('cornerDecoRight');
+            // DOM refs
+            const lockScreen = document.getElementById('lockScreen');
+            const passInput = document.getElementById('accessCode');
+            const submitAccessBtn = document.getElementById('submitAccess');
+            const statusMsg = document.getElementById('statusMsg');
+            const loadingScreen = document.getElementById('loadingScreen');
+            const welcomeScreen = document.getElementById('welcomeScreen');
+            const deskHeader = document.getElementById('deskHeader');
+            const cardsArea = document.getElementById('cardsArea');
+            const progressIndicator = document.getElementById('progressIndicator');
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightboxImg');
+            const lightboxContent = document.getElementById('lightboxContent');
+            const cinematicOverlay = document.getElementById('cinematicOverlay');
+            const cinematicText = document.getElementById('cinematicText');
+            const cinematicBtn = document.getElementById('cinematicBtn');
+            const themeToggle = document.getElementById('themeToggle');
+            const stringLights = document.getElementById('stringLights');
+            const cornerLeft = document.getElementById('cornerDecoLeft');
+            const cornerRight = document.getElementById('cornerDecoRight');
+            const toastContainer = document.getElementById('toastContainer');
 
-        // State
-        let viewedSet = new Set();
-        let viewerBusy = false;
-        let autoCloseTimer = null;
-        let sparkleInterval = null;
-        let currentCardRect = null;
-        let specialUnlocked = false;
-        let cinematicStep = 0;
-        const cardInstances = [];
-        let activeDrag = null;
-        let globalZ = 200;
-        let lockedCardInst = null;
-        let currentTheme = 'light';
+            // State
+            let viewedSet = new Set();
+            let viewerBusy = false;
+            let autoCloseTimer = null;
+            let sparkleInterval = null;
+            let currentCardRect = null;
+            let specialUnlocked = false;
+            const cardInstances = [];
+            let activeDrag = null;
+            let globalZ = 200;
+            let lockedCardInst = null;
+            let currentTheme = 'light';
+            let introScreenEl = null;
 
-        // ── THEME
-        themeToggle.addEventListener('click', () => {
-            currentTheme = currentTheme === 'light' ? 'dark' : 'light';
-            document.documentElement.setAttribute('data-theme', currentTheme);
-            themeToggle.textContent = currentTheme === 'dark' ? '☀️' : '🌙';
-        });
+            // ── THEME ──
+            themeToggle.addEventListener('click', () => {
+                currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+                document.documentElement.setAttribute('data-theme', currentTheme);
+                themeToggle.textContent = currentTheme === 'dark' ? '☀️' : '🌙';
+            });
 
-        // ── PASSWORD
-        function attemptUnlock() {
-            if (passInput.value.trim().toUpperCase() === PASSWORD) {
-                passInput.disabled = true;
-                submitBtn.disabled = true;
-                submitBtn.textContent = 'Welcome ❤️';
-                statusMsg.innerHTML = '<span style="color:#5c8a5c">✅ Identity confirmed</span>';
-                setTimeout(() => {
-                    lockScreen.classList.add('hidden');
-                    loadingScreen.classList.remove('hidden');
+            // ── PASSWORD ──
+            function attemptUnlock() {
+                if (passInput.value.trim().toUpperCase() === PASSWORD) {
+                    passInput.disabled = true;
+                    submitAccessBtn.disabled = true;
+                    submitAccessBtn.textContent = 'Welcome ❤️';
+                    statusMsg.innerHTML = '<span style="color:#5c8a5c">✅ Identity confirmed</span>';
                     setTimeout(() => {
-                        loadingScreen.classList.add('hidden');
-                        welcomeScreen.classList.remove('hidden');
-                    }, 1600);
-                }, 800);
-            } else {
-                statusMsg.innerHTML = '<span style="color:#d45a5a">Not the right code 🔒</span>';
-                passInput.style.animation = 'none';
-                passInput.offsetHeight;
-                passInput.style.animation = 'shakeInput 0.45s ease';
+                        lockScreen.classList.add('hidden');
+                        loadingScreen.classList.remove('hidden');
+                        setTimeout(() => {
+                            loadingScreen.classList.add('hidden');
+                            welcomeScreen.classList.remove('hidden');
+                        }, 1600);
+                    }, 800);
+                } else {
+                    statusMsg.innerHTML = '<span style="color:#d45a5a">Not the right code 🔒</span>';
+                    passInput.style.animation = 'none';
+                    passInput.offsetHeight;
+                    passInput.style.animation = 'shakeInput 0.45s ease';
+                }
             }
-        }
-        submitBtn.addEventListener('click', attemptUnlock);
-        passInput.addEventListener('keypress', e => { if (e.key === 'Enter') attemptUnlock(); });
-        setTimeout(() => passInput.focus(), 500);
-        const shakeStyle = document.createElement('style');
-        shakeStyle.textContent = '@keyframes shakeInput{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}';
-        document.head.appendChild(shakeStyle);
+            submitAccessBtn.addEventListener('click', attemptUnlock);
+            passInput.addEventListener('keypress', e => { if (e.key === 'Enter') attemptUnlock(); });
+            setTimeout(() => passInput.focus(), 500);
 
-        // ── TOAST
-        function showMemoryToast(count) {
-            const toast = document.createElement('div');
-            toast.className = 'memory-toast';
-            toast.innerHTML = `🌸 Memory Collected — ${count} of 5`;
-            document.getElementById('toastContainer').appendChild(toast);
-            requestAnimationFrame(() => toast.classList.add('show'));
-            setTimeout(() => {
-                toast.classList.remove('show');
-                setTimeout(() => toast.remove(), 400);
-            }, 2200);
-        }
+            const shakeStyle = document.createElement('style');
+            shakeStyle.textContent =
+                '@keyframes shakeInput{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}';
+            document.head.appendChild(shakeStyle);
 
-        // ── CLAMP
-        function clampPos(left, top, el) {
-            const vw = window.innerWidth, vh = window.innerHeight;
-            const w = el.offsetWidth || 100, h = el.offsetHeight || 80;
-            return {
-                left: Math.max(-w * 0.3, Math.min(vw - w * 0.7, left)),
-                top: Math.max(-h * 0.2, Math.min(vh - h * 0.6, top))
-            };
-        }
-
-        // ── STRING LIGHTS
-        function buildStringLights() {
-            stringLights.style.display = 'block';
-            const vw = window.innerWidth;
-            const numBulbs = Math.max(8, Math.floor(vw / 80));
-            const svgNS = 'http://www.w3.org/2000/svg';
-            const svg = document.createElementNS(svgNS, 'svg');
-            svg.setAttribute('viewBox', `0 0 ${vw} 70`);
-            svg.setAttribute('preserveAspectRatio', 'none');
-            svg.style.cssText = 'width:100%;height:70px;';
-
-            // Wire path
-            const wire = document.createElementNS(svgNS, 'path');
-            let d = `M 0 18`;
-            for (let i = 0; i <= numBulbs; i++) {
-                const x = (vw / numBulbs) * i;
-                const cy = 18 + Math.sin(i * 0.8) * 6;
-                d += ` Q ${x - vw/(numBulbs*2)} ${cy + 8} ${x} ${cy}`;
+            // ── TOAST ──
+            function showMemoryToast(count) {
+                const toast = document.createElement('div');
+                toast.className = 'memory-toast';
+                toast.innerHTML = `🌸 Memory Collected — ${count} of 5`;
+                toastContainer.appendChild(toast);
+                requestAnimationFrame(() => toast.classList.add('show'));
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    setTimeout(() => toast.remove(), 400);
+                }, 2200);
             }
-            wire.setAttribute('d', d);
-            wire.setAttribute('fill', 'none');
-            wire.setAttribute('stroke', '#8a6040');
-            wire.setAttribute('stroke-width', '1.2');
-            wire.setAttribute('opacity', '0.6');
-            svg.appendChild(wire);
 
-            // Bulbs
-            const bulbColors = ['#ffe08a','#ffc4c4','#c4e8ff','#d4ffc4','#ffd4e8','#fff3a0'];
-            for (let i = 0; i <= numBulbs; i++) {
-                const x = (vw / numBulbs) * i;
-                const wireY = 18 + Math.sin(i * 0.8) * 6;
-
-                // Stem
-                const stem = document.createElementNS(svgNS, 'line');
-                stem.setAttribute('x1', x); stem.setAttribute('y1', wireY);
-                stem.setAttribute('x2', x); stem.setAttribute('y2', wireY + 10);
-                stem.setAttribute('stroke', '#8a6040'); stem.setAttribute('stroke-width', '1');
-                stem.setAttribute('opacity', '0.5');
-                svg.appendChild(stem);
-
-                // Glow
-                const glow = document.createElementNS(svgNS, 'circle');
-                const col = bulbColors[i % bulbColors.length];
-                glow.setAttribute('cx', x); glow.setAttribute('cy', wireY + 16);
-                glow.setAttribute('r', '10');
-                glow.setAttribute('fill', col); glow.setAttribute('opacity', '0.18');
-                svg.appendChild(glow);
-
-                // Bulb body
-                const bulb = document.createElementNS(svgNS, 'ellipse');
-                bulb.setAttribute('cx', x); bulb.setAttribute('cy', wireY + 18);
-                bulb.setAttribute('rx', '5'); bulb.setAttribute('ry', '7');
-                bulb.setAttribute('fill', col);
-                bulb.setAttribute('opacity', '0.85');
-                // Subtle twinkle
-                const anim = document.createElementNS(svgNS, 'animate');
-                anim.setAttribute('attributeName', 'opacity');
-                anim.setAttribute('values', `0.85;0.95;0.75;0.9;0.85`);
-                anim.setAttribute('dur', `${1.5 + Math.random() * 2}s`);
-                anim.setAttribute('repeatCount', 'indefinite');
-                anim.setAttribute('begin', `${Math.random() * 2}s`);
-                bulb.appendChild(anim);
-                svg.appendChild(bulb);
+            // ── CLAMP ──
+            function clampPos(left, top, el) {
+                const vw = window.innerWidth,
+                    vh = window.innerHeight;
+                const w = el.offsetWidth || 100,
+                    h = el.offsetHeight || 80;
+                return {
+                    left: Math.max(-w * 0.3, Math.min(vw - w * 0.7, left)),
+                    top: Math.max(-h * 0.2, Math.min(vh - h * 0.6, top))
+                };
             }
-            stringLights.innerHTML = '';
-            stringLights.appendChild(svg);
-        }
 
-        // ── CORNER DECORATIONS
-        function buildCornerDecos() {
-            cornerLeft.style.display = 'block';
-            cornerRight.style.display = 'block';
-            cornerLeft.innerHTML = `<svg width="160" height="120" viewBox="0 0 160 120" style="opacity:0.55;">
+            // ── STRING LIGHTS ──
+            function buildStringLights() {
+                stringLights.style.display = 'block';
+                const vw = window.innerWidth;
+                const numBulbs = Math.max(8, Math.floor(vw / 80));
+                const svgNS = 'http://www.w3.org/2000/svg';
+                const svg = document.createElementNS(svgNS, 'svg');
+                svg.setAttribute('viewBox', `0 0 ${vw} 70`);
+                svg.setAttribute('preserveAspectRatio', 'none');
+                svg.style.cssText = 'width:100%;height:70px;';
+
+                const wire = document.createElementNS(svgNS, 'path');
+                let d = `M 0 18`;
+                for (let i = 0; i <= numBulbs; i++) {
+                    const x = (vw / numBulbs) * i;
+                    const cy = 18 + Math.sin(i * 0.8) * 6;
+                    d += ` Q ${x - vw/(numBulbs*2)} ${cy + 8} ${x} ${cy}`;
+                }
+                wire.setAttribute('d', d);
+                wire.setAttribute('fill', 'none');
+                wire.setAttribute('stroke', '#8a6040');
+                wire.setAttribute('stroke-width', '1.2');
+                wire.setAttribute('opacity', '0.6');
+                svg.appendChild(wire);
+
+                const bulbColors = ['#ffe08a', '#ffc4c4', '#c4e8ff', '#d4ffc4', '#ffd4e8', '#fff3a0'];
+                for (let i = 0; i <= numBulbs; i++) {
+                    const x = (vw / numBulbs) * i;
+                    const wireY = 18 + Math.sin(i * 0.8) * 6;
+                    const stem = document.createElementNS(svgNS, 'line');
+                    stem.setAttribute('x1', x);
+                    stem.setAttribute('y1', wireY);
+                    stem.setAttribute('x2', x);
+                    stem.setAttribute('y2', wireY + 10);
+                    stem.setAttribute('stroke', '#8a6040');
+                    stem.setAttribute('stroke-width', '1');
+                    stem.setAttribute('opacity', '0.5');
+                    svg.appendChild(stem);
+                    const col = bulbColors[i % bulbColors.length];
+                    const glow = document.createElementNS(svgNS, 'circle');
+                    glow.setAttribute('cx', x);
+                    glow.setAttribute('cy', wireY + 16);
+                    glow.setAttribute('r', '10');
+                    glow.setAttribute('fill', col);
+                    glow.setAttribute('opacity', '0.18');
+                    svg.appendChild(glow);
+                    const bulb = document.createElementNS(svgNS, 'ellipse');
+                    bulb.setAttribute('cx', x);
+                    bulb.setAttribute('cy', wireY + 18);
+                    bulb.setAttribute('rx', '5');
+                    bulb.setAttribute('ry', '7');
+                    bulb.setAttribute('fill', col);
+                    bulb.setAttribute('opacity', '0.85');
+                    const anim = document.createElementNS(svgNS, 'animate');
+                    anim.setAttribute('attributeName', 'opacity');
+                    anim.setAttribute('values', `0.85;0.95;0.75;0.9;0.85`);
+                    anim.setAttribute('dur', `${1.5 + Math.random() * 2}s`);
+                    anim.setAttribute('repeatCount', 'indefinite');
+                    anim.setAttribute('begin', `${Math.random() * 2}s`);
+                    bulb.appendChild(anim);
+                    svg.appendChild(bulb);
+                }
+                stringLights.innerHTML = '';
+                stringLights.appendChild(svg);
+            }
+
+            // ── CORNER DECORATIONS ──
+            function buildCornerDecos() {
+                cornerLeft.style.display = 'block';
+                cornerRight.style.display = 'block';
+                cornerLeft.innerHTML = `<svg width="160" height="120" viewBox="0 0 160 120" style="opacity:0.55;">
                 <ellipse cx="30" cy="110" rx="22" ry="10" fill="#d4a0a0" opacity="0.6"/>
                 <ellipse cx="55" cy="100" rx="18" ry="8" fill="#e8b0b0" opacity="0.5"/>
                 <ellipse cx="20" cy="95" rx="14" ry="7" fill="#c49090" opacity="0.5"/>
@@ -919,576 +1309,705 @@
                 <text x="100" y="80" font-size="12" fill="#c47080" opacity="0.5">♡</text>
                 <text x="140" y="90" font-size="10" fill="#e4a060" opacity="0.55">★</text>
             </svg>`;
-            cornerRight.innerHTML = `<svg width="130" height="100" viewBox="0 0 130 100" style="opacity:0.55;">
+                cornerRight.innerHTML = `<svg width="130" height="100" viewBox="0 0 130 100" style="opacity:0.55;">
                 <ellipse cx="90" cy="90" rx="22" ry="10" fill="#d4b0c0" opacity="0.5"/>
                 <ellipse cx="110" cy="80" rx="16" ry="8" fill="#e0c0d0" opacity="0.45"/>
                 <text x="10" y="70" font-size="11" fill="#c47080" opacity="0.5">♡</text>
                 <text x="40" y="85" font-size="11" fill="#c47080" opacity="0.45">♡</text>
                 <text x="0" y="90" font-size="10" fill="#e4a060" opacity="0.55">★</text>
             </svg>`;
-        }
+            }
 
-        // ── SCATTERED DECO ELEMENTS
-        function buildScatteredDecos() {
-            const decos = [
-                { emoji: '♡', left: '8%', top: '45%', rot: 15, delay: 0 },
-                { emoji: '♡', left: '92%', top: '38%', rot: -10, delay: 1 },
-                { emoji: '★', left: '85%', top: '22%', rot: 5, delay: 0.5 },
-                { emoji: '★', left: '12%', top: '72%', rot: -8, delay: 1.5 },
-                { emoji: '♡', left: '88%', top: '62%', rot: 12, delay: 0.3 },
-                { emoji: '♡', left: '5%', top: '30%', rot: -15, delay: 0.8 },
-                { emoji: '★', left: '93%', top: '75%', rot: 8, delay: 1.2 },
-                { emoji: '♡', left: '48%', top: '92%', rot: 0, delay: 0.6 },
-            ];
-            decos.forEach(d => {
+            // ── SCATTERED DECOS ──
+            function buildScatteredDecos() {
+                const decos = [
+                    { emoji: '♡', left: '8%', top: '45%', rot: 15, delay: 0, color: '#d4707a' },
+                    { emoji: '♡', left: '92%', top: '38%', rot: -10, delay: 1, color: '#d4707a' },
+                    { emoji: '★', left: '85%', top: '22%', rot: 5, delay: 0.5, color: '#c8a040' },
+                    { emoji: '★', left: '12%', top: '72%', rot: -8, delay: 1.5, color: '#c8a040' },
+                    { emoji: '♡', left: '88%', top: '62%', rot: 12, delay: 0.3, color: '#d4707a' },
+                    { emoji: '♡', left: '5%', top: '30%', rot: -15, delay: 0.8, color: '#d4707a' },
+                    { emoji: '★', left: '93%', top: '75%', rot: 8, delay: 1.2, color: '#c8a040' },
+                    { emoji: '♡', left: '48%', top: '92%', rot: 0, delay: 0.6, color: '#d4707a' },
+                    { emoji: '♡', left: '7%', top: '42%', rot: 14, delay: 0.2, color: '#d06878' },
+                    { emoji: '★', left: '87%', top: '19%', rot: 8, delay: 0.4, color: '#c88828' },
+                    { emoji: '♡', left: '3%', top: '56%', rot: 10, delay: 1.6, color: '#d06878' },
+                    { emoji: '★', left: '82%', top: '82%', rot: 18, delay: 1.3, color: '#c88828' },
+                ];
+                decos.forEach(d => {
+                    const el = document.createElement('div');
+                    el.className = 'deco-element';
+                    el.textContent = d.emoji;
+                    el.style.left = d.left;
+                    el.style.top = d.top;
+                    el.style.setProperty('--r', d.rot + 'deg');
+                    el.style.animationDelay = d.delay + 's';
+                    el.style.color = d.color;
+                    document.body.appendChild(el);
+                    setTimeout(() => el.classList.add('visible'), 80);
+                });
+            }
+
+            // ── BALLOONS ──
+            function buildBalloons() {
+                [{ x: '3.5%', y: '28%', sz: 82, col: '#f0aec2', lean: -5, dl: 0 }, { x: '91.5%', y: '46%', sz: 70,
+                    col: '#f0aec2', lean: 5, dl: 1.3 }].forEach(s => {
+                    const d = document.createElement('div');
+                    d.className = 'balloon';
+                    d.style.cssText =
+                        `left:${s.x};top:${s.y};--lean:${s.lean}deg;animation-delay:${s.dl}s;`;
+                    d.innerHTML = `<svg width="${s.sz}" height="${Math.round(s.sz*1.28)}" viewBox="0 0 80 102">
+                    <ellipse cx="40" cy="44" rx="38" ry="41" fill="${s.col}" opacity="0.9"/>
+                    <ellipse cx="30" cy="27" rx="11" ry="13.5" fill="rgba(255,255,255,0.34)"/>
+                    <line x1="40" y1="85" x2="42" y2="102" stroke="#c0a0ae" stroke-width="1.2"/>
+                </svg>`;
+                    document.body.appendChild(d);
+                });
+            }
+
+            // ── TAPE BUILDER ──
+            function makeTape(cls, width, height) {
                 const el = document.createElement('div');
-                el.className = 'deco-element';
-                el.textContent = d.emoji;
-                el.style.left = d.left;
-                el.style.top = d.top;
-                el.style.transform = `rotate(${d.rot}deg)`;
-                el.style.animationDelay = d.delay + 's';
-                el.style.color = d.emoji === '♡' ? '#d4707a' : '#c8a040';
-                el.style.fontFamily = 'serif';
-                document.body.appendChild(el);
-            });
-        }
+                el.className = `tape-piece ${cls}`;
+                el.style.width = width + 'px';
+                el.style.height = height + 'px';
+                return el;
+            }
 
-        // ── TAPE PIECE BUILDER
-        function makeTape(cls, width, height) {
-            const el = document.createElement('div');
-            el.className = `tape-piece ${cls}`;
-            el.style.width = width + 'px';
-            el.style.height = height + 'px';
-            return el;
-        }
-
-        // ── PUSH PIN SVG
-        function makePushPin(color='#e05050') {
-            const div = document.createElement('div');
-            div.className = 'push-pin';
-            div.innerHTML = `<svg viewBox="0 0 16 20" xmlns="http://www.w3.org/2000/svg">
+            // ── PUSH PIN ──
+            function makePushPin(color = '#e05050') {
+                const div = document.createElement('div');
+                div.className = 'push-pin';
+                div.innerHTML = `<svg viewBox="0 0 16 20" xmlns="http://www.w3.org/2000/svg">
                 <ellipse cx="8" cy="8" rx="7" ry="7" fill="${color}" opacity="0.9"/>
                 <ellipse cx="6" cy="6" rx="2.5" ry="2" fill="rgba(255,255,255,0.35)"/>
                 <line x1="8" y1="14" x2="8" y2="20" stroke="#888" stroke-width="1.5" stroke-linecap="round"/>
             </svg>`;
-            return div;
-        }
+                return div;
+            }
 
-        // ── PAPER CLIP SVG
-        function makePaperClip() {
-            const div = document.createElement('div');
-            div.className = 'paper-clip';
-            div.innerHTML = `<svg width="14" height="28" viewBox="0 0 14 28">
+            // ── PAPER CLIP ──
+            function makePaperClip() {
+                const div = document.createElement('div');
+                div.className = 'paper-clip';
+                div.innerHTML = `<svg width="14" height="28" viewBox="0 0 14 28">
                 <path d="M7 2 C3 2 1 5 1 8 L1 20 C1 23.5 4 26 7 26 C10 26 13 23.5 13 20 L13 9 C13 6.5 11 5 9 5 C7 5 5 6.5 5 9 L5 20 C5 21.1 5.9 22 7 22 C8.1 22 9 21.1 9 20 L9 9"
                     fill="none" stroke="#b0a090" stroke-width="1.5" stroke-linecap="round"/>
             </svg>`;
-            return div;
-        }
-
-        // ── BUILD CARDS
-        function buildCards() {
-            cardsArea.innerHTML = '';
-            cardInstances.length = 0;
-
-            // Photos
-            memoryData.forEach((mem, i) => {
-                const el = document.createElement('div');
-                el.className = 'paper-card polaroid';
-                if (i === 2) el.classList.add('main-photo');
-                el.setAttribute('data-index', i);
-                el.style.opacity = '0';
-
-                const photo = document.createElement('div');
-                photo.className = 'polaroid-photo';
-                const img = document.createElement('img');
-                img.src = mem.src;
-                img.alt = 'Memory ' + (i+1);
-                img.loading = 'lazy';
-                img.onerror = function() { this.onerror=null; this.src=placeholderSVG(); };
-                photo.appendChild(img);
-                el.appendChild(photo);
-
-                const cap = document.createElement('div');
-                cap.className = 'polaroid-caption';
-                cap.textContent = mem.caption;
-                el.appendChild(cap);
-
-                // Push pin on main, tape on others
-                if (i === 2) {
-                    const pin = makePushPin('#c05050');
-                    pin.style.top = '-9px';
-                    el.appendChild(pin);
-                }
-
-                cardsArea.appendChild(el);
-                cardInstances.push({ el, type: 'polaroid', index: i, currentLeft:0, currentTop:0, rotation:0, isDragging:false, startX:0, startY:0, startLeft:0, startTop:0, moved:false, isLocked:false });
-            });
-
-            // Notes
-            noteData.forEach((nd, i) => {
-                const el = document.createElement('div');
-                el.className = `paper-card note ${nd.style}`;
-                el.style.opacity = '0';
-                el.innerHTML = nd.msg.replace(/\n/g, '<br>');
-                if (nd.heart) {
-                    const h = document.createElement('span');
-                    h.className = 'note-heart';
-                    h.textContent = '♡';
-                    el.appendChild(h);
-                }
-                if (nd.clip) el.appendChild(makePaperClip());
-                cardsArea.appendChild(el);
-                cardInstances.push({ el, type:'note', index:-1, currentLeft:0, currentTop:0, rotation:0, isDragging:false, startX:0, startY:0, startLeft:0, startTop:0, moved:false, isLocked:false });
-            });
-
-            // Locked card
-            const lockedEl = document.createElement('div');
-            lockedEl.className = 'locked-card';
-            lockedEl.id = 'lockedCardEl';
-            lockedEl.innerHTML = `<span class="locked-icon">🔒</span><span class="locked-label">One Last Thing...</span><span class="locked-sub" id="lockedSubText">Explore all memories first</span>`;
-            lockedEl.style.opacity = '0';
-            cardsArea.appendChild(lockedEl);
-            lockedCardInst = { el: lockedEl, type:'locked', index:-1, currentLeft:0, currentTop:0, rotation:-1.5, isDragging:false, startX:0, startY:0, startLeft:0, startTop:0, moved:false, isLocked:true };
-            cardInstances.push(lockedCardInst);
-
-            // Arrow pointers to locked card (will be positioned after layout)
-            const arr1 = document.createElement('div');
-            arr1.className = 'arrow-pointer'; arr1.id = 'arrow1';
-            arr1.textContent = '↙'; arr1.style.setProperty('--r', '-20deg');
-            cardsArea.appendChild(arr1);
-            const arr2 = document.createElement('div');
-            arr2.className = 'arrow-pointer'; arr2.id = 'arrow2';
-            arr2.textContent = '↘'; arr2.style.setProperty('--r', '20deg');
-            cardsArea.appendChild(arr2);
-
-            positionCards();
-            addTapeDecorations();
-
-            // Fade in staggered
-            cardInstances.forEach((inst, i) => {
-                setTimeout(() => {
-                    inst.el.style.opacity = '1';
-                    inst.el.style.transition = 'opacity 0.4s ease';
-                }, i * 65 + 100);
-            });
-            updateProgress();
-        }
-
-        // ── CURATED LAYOUT
-        function positionCards() {
-            const vw = window.innerWidth;
-            const vh = window.innerHeight;
-            const isMobile = vw < 600;
-            const headerH = 105; // space for header
-            const areaH = vh - headerH;
-
-            // Photo positions relative to viewport
-            const photoPos = [
-                { xf: 0.07,  yf: 0.08, rot: -4.5 },   // 1 upper left
-                { xf: 0.62,  yf: 0.07, rot: 3.2 },    // 2 upper right
-                { xf: 0.32,  yf: 0.28, rot: -0.8 },   // 3 center (main)
-                { xf: 0.05,  yf: 0.52, rot: 4.2 },    // 4 lower left
-                { xf: 0.60,  yf: 0.50, rot: -3.5 },   // 5 lower right
-            ];
-            const notePos = [
-                { xf: 0.42,  yf: 0.06, rot: -5.0 },   // yellow top center
-                { xf: 0.16,  yf: 0.28, rot: 7.5 },    // blue left mid
-                { xf: 0.65,  yf: 0.26, rot: -4.0 },   // yellow right mid
-                { xf: 0.42,  yf: 0.60, rot: 2.5 },    // pink bottom center
-            ];
-
-            let pi = 0, ni = 0;
-            cardInstances.forEach(inst => {
-                if (inst.isLocked || inst.type === 'locked') return;
-                if (inst.type === 'polaroid') {
-                    const pos = photoPos[pi] || { xf: 0.3, yf: 0.3, rot: 0 };
-                    pi++;
-                    const w = inst.el.offsetWidth || (isMobile ? 95 : 130);
-                    const h = inst.el.offsetHeight || (isMobile ? 120 : 155);
-                    const l = vw * pos.xf - w/2;
-                    const t = headerH + areaH * pos.yf - h/2;
-                    inst.currentLeft = l; inst.currentTop = t; inst.rotation = pos.rot;
-                    inst.el.style.left = l+'px'; inst.el.style.top = t+'px';
-                    inst.el.style.transform = `rotate(${pos.rot}deg)`;
-                    inst.el.style.zIndex = 10 + Math.round(Math.abs(pos.rot));
-                } else if (inst.type === 'note') {
-                    const pos = notePos[ni] || { xf: 0.4, yf: 0.4, rot: 0 };
-                    ni++;
-                    const w = inst.el.offsetWidth || (isMobile ? 88 : 105);
-                    const h = inst.el.offsetHeight || (isMobile ? 60 : 75);
-                    const l = vw * pos.xf - w/2;
-                    const t = headerH + areaH * pos.yf - h/2;
-                    inst.currentLeft = l; inst.currentTop = t; inst.rotation = pos.rot;
-                    inst.el.style.left = l+'px'; inst.el.style.top = t+'px';
-                    inst.el.style.transform = `rotate(${pos.rot}deg)`;
-                    inst.el.style.zIndex = 6 + Math.round(Math.abs(pos.rot));
-                }
-            });
-
-            // Locked card – bottom center
-            if (lockedCardInst) {
-                const el = lockedCardInst.el;
-                const w = el.offsetWidth || (isMobile ? 108 : 130);
-                const h = el.offsetHeight || 90;
-                const l = vw/2 - w/2;
-                const t = headerH + areaH * 0.78 - h/2;
-                lockedCardInst.currentLeft = l; lockedCardInst.currentTop = t;
-                el.style.left = l+'px'; el.style.top = t+'px';
-                el.style.transform = 'rotate(-1.5deg)';
-
-                // Position arrow pointers
-                const a1 = document.getElementById('arrow1');
-                const a2 = document.getElementById('arrow2');
-                if (a1) { a1.style.left = (l - 36)+'px'; a1.style.top = (t - 18)+'px'; }
-                if (a2) { a2.style.left = (l + w + 6)+'px'; a2.style.top = (t - 18)+'px'; }
+                return div;
             }
-        }
 
-        // ── TAPE DECORATIONS
-        function addTapeDecorations() {
-            cardsArea.querySelectorAll('.tape-piece').forEach(t => t.remove());
+            // ── BUILD CARDS ──
+            function buildCards() {
+                cardsArea.innerHTML = '';
+                cardInstances.length = 0;
 
-            const tapeSpecs = [
-                // [cardIndex, style, width, height, offsetX_pct, offsetY_sign, rot]
-                // Photo 0 - upper left - polka pink
-                { ci: 0, style: 'tape-polka', w: 42, h: 14, ox: 0.5, oy: 'top', rot: -8 },
-                // Photo 1 - upper right - gingham blue
-                { ci: 1, style: 'tape-gingham', w: 38, h: 14, ox: 0.5, oy: 'top', rot: 9 },
-                // Photo 2 - main center - solid gold (push pin instead, skip)
-                // Photo 3 - lower left - stripe purple
-                { ci: 3, style: 'tape-stripe', w: 44, h: 14, ox: 0.5, oy: 'top', rot: 12 },
-                // Photo 4 - lower right - gingham blue
-                { ci: 4, style: 'tape-gingham', w: 40, h: 14, ox: 0.5, oy: 'top', rot: -5 },
-                // Note 0 - tape solid on top
-                { ci: 5, style: 'tape-solid', w: 34, h: 12, ox: 0.5, oy: 'top', rot: -3 },
-                // Note 1 - tape polka top
-                { ci: 6, style: 'tape-polka', w: 36, h: 12, ox: 0.5, oy: 'top', rot: 6 },
-                // Note 2 - tape gingham top
-                { ci: 7, style: 'tape-gingham', w: 32, h: 12, ox: 0.5, oy: 'top', rot: -7 },
-                // Note 3 - tape stripe top
-                { ci: 8, style: 'tape-stripe', w: 36, h: 12, ox: 0.5, oy: 'top', rot: 4 },
-            ];
+                // Create photos
+                memoryData.forEach((mem, i) => {
+                    const el = document.createElement('div');
+                    el.className = 'paper-card polaroid';
+                    if (i === 2) el.classList.add('main-photo');
+                    el.setAttribute('data-index', i);
+                    el.style.opacity = '0';
 
-            tapeSpecs.forEach(spec => {
-                const inst = cardInstances[spec.ci];
-                if (!inst) return;
-                const el = inst.el;
-                const tape = makeTape(spec.style, spec.w, spec.h);
-                const cardW = el.offsetWidth || 110;
-                const left = inst.currentLeft + (cardW * spec.ox) - spec.w/2;
-                const top = inst.currentTop - spec.h/2 + (spec.oy === 'top' ? 0 : el.offsetHeight - 2);
-                tape.style.left = left + 'px';
-                tape.style.top = top + 'px';
-                tape.style.transform = `rotate(${spec.rot}deg)`;
-                cardsArea.appendChild(tape);
-            });
-        }
+                    const photo = document.createElement('div');
+                    photo.className = 'polaroid-photo';
+                    const img = document.createElement('img');
+                    img.src = mem.src;
+                    img.alt = 'Memory ' + (i + 1);
+                    img.loading = 'lazy';
+                    img.onerror = function() { this.onerror = null;
+                        this.src = placeholderSVG(); };
+                    photo.appendChild(img);
+                    el.appendChild(photo);
 
-        // ── PROGRESS
-        function updateProgress() {
-            const count = viewedSet.size;
-            if (count >= 5) {
-                progressIndicator.textContent = '✨ All Memories Explored';
-                progressIndicator.classList.add('visible');
-            } else if (count > 0) {
-                progressIndicator.textContent = `Memory ${count} of 5 viewed`;
-                progressIndicator.classList.add('visible');
-            } else {
-                progressIndicator.classList.remove('visible');
-            }
-            const sub = document.getElementById('lockedSubText');
-            if (sub && lockedCardInst && !specialUnlocked) {
-                sub.textContent = count >= 5 ? 'All memories explored ✨' : 'Explore all memories first';
-            }
-            if (count >= 5 && !specialUnlocked) unlockSpecialCard();
-        }
+                    const cap = document.createElement('div');
+                    cap.className = 'polaroid-caption';
+                    cap.textContent = mem.caption;
+                    el.appendChild(cap);
 
-        // ── UNLOCK SPECIAL CARD
-        function unlockSpecialCard() {
-            specialUnlocked = true;
-            if (!lockedCardInst) return;
-            const el = lockedCardInst.el;
-            const rect = el.getBoundingClientRect();
-            const cx = rect.left + rect.width/2, cy = rect.top + rect.height/2;
-            for (let i = 0; i < 16; i++) {
-                const s = document.createElement('div');
-                s.className = 'sparkle';
-                s.textContent = Math.random() > 0.5 ? '✨' : '⭐';
-                s.style.left = (cx + (Math.random()-0.5)*120)+'px';
-                s.style.top = (cy + (Math.random()-0.5)*80)+'px';
-                s.style.animationDuration = (1+Math.random()*1.5)+'s';
-                s.style.animationDelay = (Math.random()*0.5)+'s';
-                document.body.appendChild(s);
-                setTimeout(() => s.remove(), 2500);
-            }
-            el.classList.add('shaking');
-            el.addEventListener('animationend', function h() {
-                el.classList.remove('shaking');
-                el.removeEventListener('animationend', h);
-            });
-            setTimeout(() => {
-                el.classList.add('unlocked');
-                el.querySelector('.locked-icon').textContent = '💌';
-                el.querySelector('.locked-label').textContent = 'One Last Thing...';
-                const sub = el.querySelector('.locked-sub');
-                if (sub) sub.textContent = 'Tap to open';
-                lockedCardInst.isLocked = false;
-            }, 600);
-        }
+                    if (i === 2) {
+                        const pin = makePushPin('#c05050');
+                        pin.style.top = '-9px';
+                        el.appendChild(pin);
+                    }
 
-        // ── VIEWER
-        function openViewer(cardEl, index) {
-            if (viewerBusy) return;
-            viewerBusy = true;
-            clearTimeout(autoCloseTimer);
-            stopSparkles();
+                    cardsArea.appendChild(el);
+                    cardInstances.push({
+                        el,
+                        type: 'polaroid',
+                        index: i,
+                        currentLeft: 0,
+                        currentTop: 0,
+                        rotation: 0,
+                        isDragging: false,
+                        startX: 0,
+                        startY: 0,
+                        startLeft: 0,
+                        startTop: 0,
+                        moved: false,
+                        isLocked: false
+                    });
+                });
 
-            const img = cardEl.querySelector('.polaroid-photo img');
-            lightboxImg.src = img ? img.src : memoryData[index].src;
-            currentCardRect = img ? img.getBoundingClientRect() : cardEl.getBoundingClientRect();
+                // Create notes
+                noteData.forEach((nd, i) => {
+                    const el = document.createElement('div');
+                    el.className = `paper-card note ${nd.style}`;
+                    el.style.opacity = '0';
+                    el.innerHTML = nd.msg.replace(/\n/g, '<br>');
+                    if (nd.heart) {
+                        const h = document.createElement('span');
+                        h.className = 'note-heart';
+                        h.textContent = '♡';
+                        el.appendChild(h);
+                    }
+                    if (nd.clip) el.appendChild(makePaperClip());
+                    cardsArea.appendChild(el);
+                    cardInstances.push({
+                        el,
+                        type: 'note',
+                        index: -1,
+                        currentLeft: 0,
+                        currentTop: 0,
+                        rotation: 0,
+                        isDragging: false,
+                        startX: 0,
+                        startY: 0,
+                        startLeft: 0,
+                        startTop: 0,
+                        moved: false,
+                        isLocked: false
+                    });
+                });
 
-            const oldCap = lightboxContent.querySelector('.lightbox-caption');
-            if (oldCap) oldCap.remove();
-            const capEl = document.createElement('div');
-            capEl.className = 'lightbox-caption';
-            capEl.textContent = memoryData[index].caption;
-            lightboxContent.appendChild(capEl);
+                // Create locked card
+                const lockedEl = document.createElement('div');
+                lockedEl.className = 'locked-card';
+                lockedEl.id = 'lockedCardEl';
+                lockedEl.innerHTML =
+                    `<span class="locked-icon">🔒</span><span class="locked-label">One Last Thing...</span><span class="locked-sub" id="lockedSubText">Explore all memories first</span>`;
+                lockedEl.style.opacity = '0';
+                cardsArea.appendChild(lockedEl);
+                lockedCardInst = {
+                    el: lockedEl,
+                    type: 'locked',
+                    index: -1,
+                    currentLeft: 0,
+                    currentTop: 0,
+                    rotation: -1.5,
+                    isDragging: false,
+                    startX: 0,
+                    startY: 0,
+                    startLeft: 0,
+                    startTop: 0,
+                    moved: false,
+                    isLocked: true
+                };
+                cardInstances.push(lockedCardInst);
 
-            lightbox.classList.add('active');
-            requestAnimationFrame(() => {
-                morphOpen(currentCardRect);
-                spawnSparkles(8);
-                startSparkles();
-            });
+                // Arrow pointers
+                const arr1 = document.createElement('div');
+                arr1.className = 'arrow-pointer';
+                arr1.id = 'arrow1';
+                arr1.textContent = '↙';
+                arr1.style.setProperty('--r', '-20deg');
+                cardsArea.appendChild(arr1);
+                const arr2 = document.createElement('div');
+                arr2.className = 'arrow-pointer';
+                arr2.id = 'arrow2';
+                arr2.textContent = '↘';
+                arr2.style.setProperty('--r', '20deg');
+                cardsArea.appendChild(arr2);
 
-            if (!viewedSet.has(index)) {
-                viewedSet.add(index);
-                cardEl.classList.add('viewed');
-                showMemoryToast(viewedSet.size);
+                positionCards();
+                addTapeDecorations();
+
+                // Staggered fade-in
+                cardInstances.forEach((inst, i) => {
+                    setTimeout(() => {
+                        inst.el.style.opacity = '1';
+                        inst.el.style.transition = 'opacity 0.4s ease';
+                    }, i * 65 + 100);
+                });
                 updateProgress();
             }
-            autoCloseTimer = setTimeout(() => closeViewer(), 5500);
-        }
 
-        function morphOpen(startRect) {
-            const wr = lightboxContent.getBoundingClientRect();
-            const tx = (startRect.left + startRect.width/2) - (wr.left + wr.width/2);
-            const ty = (startRect.top + startRect.height/2) - (wr.top + wr.height/2);
-            const sc = Math.min(startRect.width/wr.width, startRect.height/wr.height);
-            lightboxContent.animate([
-                { transform: `translate(${tx}px,${ty}px) scale(${sc}) rotateY(18deg)`, opacity: 0.3, filter: 'blur(20px)' },
-                { transform: 'translate(0,0) scale(1) rotateY(0deg)', opacity: 1, filter: 'blur(0px)' }
-            ], { duration: 880, easing: 'cubic-bezier(0.22,1,0.36,1)', fill: 'forwards' });
-        }
+            // ── POSITION CARDS ──
+            function positionCards() {
+                const vw = window.innerWidth;
+                const vh = window.innerHeight;
+                const isMobile = vw < 600;
+                const headerH = isMobile ? 100 : 115;
+                const areaH = vh - headerH;
 
-        function closeViewer(instant=false) {
-            clearTimeout(autoCloseTimer);
-            stopSparkles();
-            if (!lightbox.classList.contains('active')) { viewerBusy = false; return; }
-            if (instant) {
-                lightbox.classList.remove('active');
-                lightboxImg.src = '';
-                lightboxContent.querySelector('.lightbox-caption')?.remove();
-                lightboxContent.animate([{transform:'none',filter:'blur(0)',opacity:1}],{duration:0,fill:'forwards'});
-                viewerBusy = false; return;
-            }
-            if (currentCardRect) {
-                const wr = lightboxContent.getBoundingClientRect();
-                const tx = (currentCardRect.left + currentCardRect.width/2) - (wr.left + wr.width/2);
-                const ty = (currentCardRect.top + currentCardRect.height/2) - (wr.top + wr.height/2);
-                const sc = Math.min(currentCardRect.width/wr.width, currentCardRect.height/wr.height);
-                lightboxContent.animate([
-                    { transform:'translate(0,0) scale(1) rotateY(0deg)', opacity:1, filter:'blur(0)' },
-                    { transform:`translate(${tx}px,${ty}px) scale(${sc}) rotateY(-18deg)`, opacity:0.2, filter:'blur(20px)' }
-                ], { duration: 750, easing:'ease', fill:'forwards' });
-            }
-            lightboxContent.querySelector('.lightbox-caption')?.remove();
-            setTimeout(() => {
-                lightbox.classList.remove('active');
-                lightboxImg.src = '';
-                lightboxContent.animate([{transform:'none',filter:'blur(0)',opacity:1}],{duration:0,fill:'forwards'});
-                viewerBusy = false;
-            }, 750);
-        }
+                // Fixed card sizes for positioning
+                const polW = isMobile ? 95 : 130;
+                const polMainW = isMobile ? 110 : 150;
+                const noteW = isMobile ? 88 : 105;
 
-        lightbox.addEventListener('click', e => {
-            if (e.target.classList.contains('lightbox-overlay')) closeViewer();
-        });
-        document.addEventListener('keydown', e => {
-            if (e.key === 'Escape' && lightbox.classList.contains('active')) closeViewer();
-        });
+                const photoPositions = [
+                    { xf: 0.08, yf: 0.06, rot: -4.5 },
+                    { xf: 0.64, yf: 0.05, rot: 3.2 },
+                    { xf: 0.34, yf: 0.26, rot: -0.8 },
+                    { xf: 0.06, yf: 0.50, rot: 4.2 },
+                    { xf: 0.62, yf: 0.48, rot: -3.5 },
+                ];
+                const notePositions = [
+                    { xf: 0.40, yf: 0.04, rot: -5.0 },
+                    { xf: 0.18, yf: 0.30, rot: 7.5 },
+                    { xf: 0.63, yf: 0.24, rot: -4.0 },
+                    { xf: 0.44, yf: 0.58, rot: 2.5 },
+                ];
 
-        function spawnSparkles(n=6) {
-            for (let i=0; i<n; i++) {
-                const s = document.createElement('div');
-                s.className = 'sparkle';
-                s.textContent = Math.random() > 0.5 ? '✨' : '⭐';
-                s.style.left = (15+Math.random()*70)+'vw';
-                s.style.top = (20+Math.random()*55)+'vh';
-                s.style.animationDelay = (Math.random()*0.8)+'s';
-                document.body.appendChild(s);
-                setTimeout(() => s.remove(), 2800);
-            }
-        }
-        function startSparkles() {
-            stopSparkles();
-            sparkleInterval = setInterval(() => spawnSparkles(3), 2000);
-        }
-        function stopSparkles() {
-            if (sparkleInterval) { clearInterval(sparkleInterval); sparkleInterval = null; }
-        }
+                let pi = 0,
+                    ni = 0;
+                const photoWidths = [polW, polW, polMainW, polW, polW];
 
-        // ── DRAG
-        function bringToFront(inst) { globalZ++; inst.el.style.zIndex = globalZ; }
-
-        function onDragStart(inst, cx, cy) {
-            bringToFront(inst);
-            inst.isDragging = true; inst.moved = false;
-            inst.startX = cx; inst.startY = cy;
-            inst.startLeft = inst.currentLeft; inst.startTop = inst.currentTop;
-            inst.el.classList.add('dragging');
-            inst.el.style.transition = 'box-shadow 0.1s';
-            inst.el.style.boxShadow = '0 16px 48px rgba(0,0,0,0.22), 0 4px 12px rgba(0,0,0,0.1)';
-            activeDrag = inst;
-        }
-        function onDragMove(cx, cy) {
-            if (!activeDrag) return;
-            const dx = cx - activeDrag.startX, dy = cy - activeDrag.startY;
-            if (Math.abs(dx) > 2 || Math.abs(dy) > 2) activeDrag.moved = true;
-            const c = clampPos(activeDrag.startLeft+dx, activeDrag.startTop+dy, activeDrag.el);
-            activeDrag.currentLeft = c.left; activeDrag.currentTop = c.top;
-            activeDrag.el.style.left = c.left+'px'; activeDrag.el.style.top = c.top+'px';
-            if (!activeDrag.isLocked) {
-                const tilt = Math.max(-4, Math.min(4, dx * 0.015));
-                activeDrag.el.style.transform = `rotate(${activeDrag.rotation + tilt}deg)`;
-            }
-        }
-        function onDragEnd() {
-            if (!activeDrag) return;
-            const inst = activeDrag;
-            inst.isDragging = false;
-            inst.el.classList.remove('dragging');
-            inst.el.style.transition = 'box-shadow 0.3s, transform 0.35s cubic-bezier(0.25,0.8,0.25,1.2)';
-            inst.el.style.boxShadow = '';
-            if (!inst.isLocked) inst.el.style.transform = `rotate(${inst.rotation}deg)`;
-            if (!inst.moved && inst.type === 'polaroid') openViewer(inst.el, inst.index);
-            if (!inst.moved && inst.type === 'locked' && !inst.isLocked) openSpecialMessage();
-            activeDrag = null;
-        }
-
-        cardsArea.addEventListener('mousedown', e => {
-            const cardEl = e.target.closest('.paper-card') || e.target.closest('.locked-card');
-            if (!cardEl) return;
-            const inst = cardInstances.find(i => i.el === cardEl);
-            if (!inst || inst.isLocked) return;
-            e.preventDefault();
-            onDragStart(inst, e.clientX, e.clientY);
-        });
-        window.addEventListener('mousemove', e => { if (activeDrag) onDragMove(e.clientX, e.clientY); });
-        window.addEventListener('mouseup', () => { if (activeDrag) onDragEnd(); });
-
-        cardsArea.addEventListener('touchstart', e => {
-            const cardEl = e.target.closest('.paper-card') || e.target.closest('.locked-card');
-            if (!cardEl) return;
-            const inst = cardInstances.find(i => i.el === cardEl);
-            if (!inst || inst.isLocked) return;
-            e.preventDefault();
-            onDragStart(inst, e.touches[0].clientX, e.touches[0].clientY);
-        }, { passive: false });
-        window.addEventListener('touchmove', e => {
-            if (activeDrag && e.touches[0]) { e.preventDefault(); onDragMove(e.touches[0].clientX, e.touches[0].clientY); }
-        }, { passive: false });
-        window.addEventListener('touchend', () => { if (activeDrag) onDragEnd(); });
-
-        // ── CINEMATIC
-        function openSpecialMessage() {
-            cinematicStep = 0;
-            cinematicText.innerHTML = `<span class="handwritten-heading">A little note</span><p>Because birthdays come every year.<br><br>But effort should feel personal.</p>`;
-            cinematicBtn.textContent = 'Continue →';
-            cinematicBtn.style.display = 'inline-block';
-            cinematicOverlay.classList.add('active');
-            cinematicBtn.onclick = () => openFinalLetter();
-        }
-        function openFinalLetter() {
-            cinematicStep = 1;
-            cinematicText.innerHTML = `<span class="handwritten-heading">For You</span><p>I don't know if this website is perfect.<br><br>But I wanted to make something that was yours.<br><br>Not a template. Not a forwarded message.<br><br>Just a small thing made only for you.<br><br>Happy Birthday, Ms. Nain ❤️</p>`;
-            cinematicBtn.textContent = 'One More Thing...';
-            cinematicBtn.onclick = () => openPersonalMessage();
-        }
-        function openPersonalMessage() {
-            cinematicStep = 2;
-            cinematicText.innerHTML = `<span class="handwritten-heading">One More Thing...</span><p>Past me jo bhi hua uske liye sorry.<br><br>For my behaviour, for my mistakes,<br>aur un baaton ke liye jo shayad<br>nahi honi chahiye thi.<br><br>Bas itna hi kehna tha.<br><br>Happy Birthday, Ms. Nain ❤️</p>`;
-            cinematicBtn.textContent = '❤️ Close';
-            cinematicBtn.onclick = () => {
-                cinematicOverlay.classList.remove('active');
-                cinematicText.innerHTML = '';
-            };
-        }
-        cinematicOverlay.addEventListener('click', e => {
-            if (e.target === cinematicOverlay) { cinematicOverlay.classList.remove('active'); }
-        });
-
-        // ── TYPEWRITER INTRO
-        function typewriter(el, text, speed=40, onDone=null) {
-            el.textContent = ''; let i = 0;
-            const t = setInterval(() => {
-                if (i < text.length) { el.textContent += text[i]; i++; }
-                else { clearInterval(t); if (onDone) setTimeout(onDone, 400); }
-            }, speed);
-        }
-
-        function startIntro() {
-            const intro = document.createElement('div');
-            intro.id = 'introScreen';
-            intro.style.cssText = 'position:fixed;inset:0;z-index:900;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at center,#1a1018 0%,#0d080c 100%);opacity:0;transition:opacity 0.7s;';
-            const typeEl = document.createElement('div');
-            typeEl.className = 'typewriter-text';
-            intro.appendChild(typeEl);
-            document.body.appendChild(intro);
-            requestAnimationFrame(() => { intro.style.opacity = '1'; });
-            const msg = 'Log usually gifts dete hain.\n\nMujhe samajh nahi aaya kya du.\n\nTo maine ye bana diya ❤️';
-            setTimeout(() => {
-                typewriter(typeEl, msg, 42, () => {
-                    setTimeout(() => {
-                        intro.style.opacity = '0';
-                        setTimeout(() => { intro.remove(); showMainScreen(); }, 800);
-                    }, 1400);
-                });
-            }, 200);
-        }
-
-        function showMainScreen() {
-            scrapbookDesk.classList.add('active');
-            buildStringLights();
-            buildCornerDecos();
-            buildScatteredDecos();
-            buildCards();
-        }
-
-        document.getElementById('openScrapbookBtn').addEventListener('click', () => {
-            welcomeScreen.classList.add('hidden');
-            startIntro();
-        });
-
-        // ── RESIZE
-        let resTO;
-        window.addEventListener('resize', () => {
-            clearTimeout(resTO);
-            resTO = setTimeout(() => {
-                buildStringLights();
                 cardInstances.forEach(inst => {
-                    const c = clampPos(inst.currentLeft, inst.currentTop, inst.el);
-                    inst.currentLeft = c.left; inst.currentTop = c.top;
-                    inst.el.style.left = c.left+'px'; inst.el.style.top = c.top+'px';
+                    if (inst.isLocked || inst.type === 'locked') return;
+                    if (inst.type === 'polaroid') {
+                        const pos = photoPositions[pi] || { xf: 0.3, yf: 0.3, rot: 0 };
+                        const w = photoWidths[pi] || polW;
+                        pi++;
+                        const l = vw * pos.xf - w / 2;
+                        const t = headerH + areaH * pos.yf;
+                        inst.currentLeft = l;
+                        inst.currentTop = t;
+                        inst.rotation = pos.rot;
+                        inst.el.style.left = l + 'px';
+                        inst.el.style.top = t + 'px';
+                        inst.el.style.transform = `rotate(${pos.rot}deg)`;
+                        inst.el.style.zIndex = 10 + Math.round(Math.abs(pos.rot));
+                        inst.el.style.width = w + 'px';
+                    } else if (inst.type === 'note') {
+                        const pos = notePositions[ni] || { xf: 0.4, yf: 0.4, rot: 0 };
+                        const w = noteW;
+                        ni++;
+                        const l = vw * pos.xf - w / 2;
+                        const t = headerH + areaH * pos.yf;
+                        inst.currentLeft = l;
+                        inst.currentTop = t;
+                        inst.rotation = pos.rot;
+                        inst.el.style.left = l + 'px';
+                        inst.el.style.top = t + 'px';
+                        inst.el.style.transform = `rotate(${pos.rot}deg)`;
+                        inst.el.style.zIndex = 6 + Math.round(Math.abs(pos.rot));
+                        inst.el.style.width = w + 'px';
+                    }
                 });
-                addTapeDecorations();
-            }, 400);
-        });
 
-        passInput.focus();
-        console.log('🌸 For Ms. Nain ❤️ — A handcrafted memory board');
-    })();
+                // Locked card — bottom center
+                if (lockedCardInst) {
+                    const el = lockedCardInst.el;
+                    const lkWidth = isMobile ? 110 : 135;
+                    const l = vw / 2 - lkWidth / 2;
+                    const t = headerH + areaH * 0.76;
+                    lockedCardInst.currentLeft = l;
+                    lockedCardInst.currentTop = t;
+                    el.style.left = l + 'px';
+                    el.style.top = t + 'px';
+                    el.style.width = lkWidth + 'px';
+                    el.style.transform = 'rotate(-1.5deg)';
+
+                    const a1 = document.getElementById('arrow1');
+                    const a2 = document.getElementById('arrow2');
+                    if (a1) { a1.style.left = (l - 34) + 'px';
+                        a1.style.top = (t - 16) + 'px'; }
+                    if (a2) { a2.style.left = (l + lkWidth + 4) + 'px';
+                        a2.style.top = (t - 16) + 'px'; }
+                }
+            }
+
+            // ── TAPE DECORATIONS ──
+            function addTapeDecorations() {
+                cardsArea.querySelectorAll('.tape-piece').forEach(t => t.remove());
+
+                const tapeSpecs = [
+                    { ci: 0, style: 'tape-polka', w: 42, h: 14, ox: 0.5, rot: -8 },
+                    { ci: 1, style: 'tape-gingham', w: 38, h: 14, ox: 0.5, rot: 9 },
+                    { ci: 3, style: 'tape-stripe', w: 44, h: 14, ox: 0.5, rot: 12 },
+                    { ci: 4, style: 'tape-gingham', w: 40, h: 14, ox: 0.5, rot: -5 },
+                    { ci: 5, style: 'tape-solid', w: 34, h: 12, ox: 0.5, rot: -3 },
+                    { ci: 6, style: 'tape-polka', w: 36, h: 12, ox: 0.5, rot: 6 },
+                    { ci: 7, style: 'tape-gingham', w: 32, h: 12, ox: 0.5, rot: -7 },
+                    { ci: 8, style: 'tape-stripe', w: 36, h: 12, ox: 0.5, rot: 4 },
+                ];
+
+                tapeSpecs.forEach(spec => {
+                    const inst = cardInstances[spec.ci];
+                    if (!inst || !inst.el) return;
+                    const tape = makeTape(spec.style, spec.w, spec.h);
+                    const cardW = inst.el.offsetWidth || 110;
+                    const left = inst.currentLeft + (cardW * spec.ox) - spec.w / 2;
+                    const top = inst.currentTop - spec.h / 2;
+                    tape.style.left = left + 'px';
+                    tape.style.top = top + 'px';
+                    tape.style.transform = `rotate(${spec.rot}deg)`;
+                    cardsArea.appendChild(tape);
+                });
+
+                // Tape on locked card
+                if (lockedCardInst && lockedCardInst.el) {
+                    const lkEl = lockedCardInst.el;
+                    const lkW = lkEl.offsetWidth || 135;
+                    const lkTape = makeTape('tape-polka', 38, 13);
+                    lkTape.style.left = (lockedCardInst.currentLeft + lkW / 2 - 19) + 'px';
+                    lkTape.style.top = (lockedCardInst.currentTop - 7) + 'px';
+                    lkTape.style.transform = 'rotate(-3deg)';
+                    cardsArea.appendChild(lkTape);
+                }
+            }
+
+            // ── PROGRESS ──
+            function updateProgress() {
+                const count = viewedSet.size;
+                if (count >= 5) {
+                    progressIndicator.textContent = '✨ All Memories Explored';
+                    progressIndicator.classList.add('visible');
+                } else if (count > 0) {
+                    progressIndicator.textContent = `Memory ${count} of 5 viewed`;
+                    progressIndicator.classList.add('visible');
+                } else {
+                    progressIndicator.classList.remove('visible');
+                }
+                const sub = document.getElementById('lockedSubText');
+                if (sub && lockedCardInst && !specialUnlocked) {
+                    sub.textContent = count >= 5 ? 'All memories explored ✨' : 'Explore all memories first';
+                }
+                if (count >= 5 && !specialUnlocked) unlockSpecialCard();
+            }
+
+            // ── UNLOCK SPECIAL CARD ──
+            function unlockSpecialCard() {
+                specialUnlocked = true;
+                if (!lockedCardInst) return;
+                const el = lockedCardInst.el;
+                const rect = el.getBoundingClientRect();
+                const cx = rect.left + rect.width / 2,
+                    cy = rect.top + rect.height / 2;
+                for (let i = 0; i < 16; i++) {
+                    const s = document.createElement('div');
+                    s.className = 'sparkle';
+                    s.textContent = Math.random() > 0.5 ? '✨' : '⭐';
+                    s.style.left = (cx + (Math.random() - 0.5) * 120) + 'px';
+                    s.style.top = (cy + (Math.random() - 0.5) * 80) + 'px';
+                    s.style.animationDuration = (1 + Math.random() * 1.5) + 's';
+                    s.style.animationDelay = (Math.random() * 0.5) + 's';
+                    document.body.appendChild(s);
+                    setTimeout(() => s.remove(), 2500);
+                }
+                el.classList.add('shaking');
+                el.addEventListener('animationend', function h() {
+                    el.classList.remove('shaking');
+                    el.removeEventListener('animationend', h);
+                });
+                setTimeout(() => {
+                    el.classList.add('unlocked');
+                    el.querySelector('.locked-icon').textContent = '💌';
+                    el.querySelector('.locked-label').textContent = 'One Last Thing...';
+                    const sub = el.querySelector('.locked-sub');
+                    if (sub) sub.textContent = 'Tap to open';
+                    lockedCardInst.isLocked = false;
+                    document.querySelectorAll('.arrow-pointer').forEach(a => a.classList.add(
+                        'show'));
+                }, 600);
+            }
+
+            // ── VIEWER ──
+            function openViewer(cardEl, index) {
+                if (viewerBusy) return;
+                viewerBusy = true;
+                clearTimeout(autoCloseTimer);
+                stopSparkles();
+
+                const img = cardEl.querySelector('.polaroid-photo img');
+                lightboxImg.src = img ? img.src : memoryData[index].src;
+                currentCardRect = img ? img.getBoundingClientRect() : cardEl.getBoundingClientRect();
+
+                const oldCap = lightboxContent.querySelector('.lightbox-caption');
+                if (oldCap) oldCap.remove();
+                const capEl = document.createElement('div');
+                capEl.className = 'lightbox-caption';
+                capEl.textContent = memoryData[index].caption;
+                lightboxContent.appendChild(capEl);
+
+                lightbox.classList.add('active');
+                requestAnimationFrame(() => {
+                    morphOpen(currentCardRect);
+                    spawnSparkles(8);
+                    startSparkles();
+                });
+
+                if (!viewedSet.has(index)) {
+                    viewedSet.add(index);
+                    cardEl.classList.add('viewed');
+                    showMemoryToast(viewedSet.size);
+                    updateProgress();
+                }
+                autoCloseTimer = setTimeout(() => closeViewer(), 5500);
+            }
+
+            function morphOpen(startRect) {
+                const wr = lightboxContent.getBoundingClientRect();
+                const tx = (startRect.left + startRect.width / 2) - (wr.left + wr.width / 2);
+                const ty = (startRect.top + startRect.height / 2) - (wr.top + wr.height / 2);
+                const sc = Math.min(startRect.width / wr.width, startRect.height / wr.height);
+                lightboxContent.animate([
+                    { transform: `translate(${tx}px,${ty}px) scale(${sc}) rotateY(18deg)`, opacity: 0.3,
+                        filter: 'blur(20px)' },
+                    { transform: 'translate(0,0) scale(1) rotateY(0deg)', opacity: 1, filter: 'blur(0px)' }
+                ], { duration: 880, easing: 'cubic-bezier(0.22,1,0.36,1)', fill: 'forwards' });
+            }
+
+            function closeViewer(instant = false) {
+                clearTimeout(autoCloseTimer);
+                stopSparkles();
+                if (!lightbox.classList.contains('active')) { viewerBusy = false; return; }
+                if (instant) {
+                    lightbox.classList.remove('active');
+                    lightboxImg.src = '';
+                    const cap = lightboxContent.querySelector('.lightbox-caption');
+                    if (cap) cap.remove();
+                    lightboxContent.animate([{ transform: 'none', filter: 'blur(0)', opacity: 1 }], { duration: 0,
+                        fill: 'forwards' });
+                    viewerBusy = false;
+                    return;
+                }
+                if (currentCardRect) {
+                    const wr = lightboxContent.getBoundingClientRect();
+                    const tx = (currentCardRect.left + currentCardRect.width / 2) - (wr.left + wr.width / 2);
+                    const ty = (currentCardRect.top + currentCardRect.height / 2) - (wr.top + wr.height / 2);
+                    const sc = Math.min(currentCardRect.width / wr.width, currentCardRect.height / wr.height);
+                    lightboxContent.animate([
+                        { transform: 'translate(0,0) scale(1) rotateY(0deg)', opacity: 1, filter: 'blur(0)' },
+                        { transform: `translate(${tx}px,${ty}px) scale(${sc}) rotateY(-18deg)`, opacity: 0.2,
+                            filter: 'blur(20px)' }
+                    ], { duration: 750, easing: 'ease', fill: 'forwards' });
+                }
+                const cap = lightboxContent.querySelector('.lightbox-caption');
+                if (cap) cap.remove();
+                setTimeout(() => {
+                    lightbox.classList.remove('active');
+                    lightboxImg.src = '';
+                    lightboxContent.animate([{ transform: 'none', filter: 'blur(0)', opacity: 1 }], { duration: 0,
+                        fill: 'forwards' });
+                    viewerBusy = false;
+                }, 750);
+            }
+
+            lightbox.addEventListener('click', e => {
+                if (e.target.classList.contains('lightbox-overlay')) closeViewer();
+            });
+            document.addEventListener('keydown', e => {
+                if (e.key === 'Escape' && lightbox.classList.contains('active')) closeViewer();
+            });
+
+            function spawnSparkles(n = 6) {
+                for (let i = 0; i < n; i++) {
+                    const s = document.createElement('div');
+                    s.className = 'sparkle';
+                    s.textContent = Math.random() > 0.5 ? '✨' : '⭐';
+                    s.style.left = (15 + Math.random() * 70) + 'vw';
+                    s.style.top = (20 + Math.random() * 55) + 'vh';
+                    s.style.animationDelay = (Math.random() * 0.8) + 's';
+                    document.body.appendChild(s);
+                    setTimeout(() => s.remove(), 2800);
+                }
+            }
+
+            function startSparkles() {
+                stopSparkles();
+                sparkleInterval = setInterval(() => spawnSparkles(3), 2000);
+            }
+
+            function stopSparkles() {
+                if (sparkleInterval) { clearInterval(sparkleInterval);
+                    sparkleInterval = null; }
+            }
+
+            // ── DRAG ──
+            function bringToFront(inst) { globalZ++;
+                inst.el.style.zIndex = globalZ; }
+
+            function onDragStart(inst, cx, cy) {
+                bringToFront(inst);
+                inst.isDragging = true;
+                inst.moved = false;
+                inst.startX = cx;
+                inst.startY = cy;
+                inst.startLeft = inst.currentLeft;
+                inst.startTop = inst.currentTop;
+                inst.el.classList.add('dragging');
+                inst.el.style.transition = 'box-shadow 0.1s';
+                activeDrag = inst;
+            }
+
+            function onDragMove(cx, cy) {
+                if (!activeDrag) return;
+                const dx = cx - activeDrag.startX,
+                    dy = cy - activeDrag.startY;
+                if (Math.abs(dx) > 2 || Math.abs(dy) > 2) activeDrag.moved = true;
+                const c = clampPos(activeDrag.startLeft + dx, activeDrag.startTop + dy, activeDrag.el);
+                activeDrag.currentLeft = c.left;
+                activeDrag.currentTop = c.top;
+                activeDrag.el.style.left = c.left + 'px';
+                activeDrag.el.style.top = c.top + 'px';
+                if (!activeDrag.isLocked) {
+                    const tilt = Math.max(-4, Math.min(4, dx * 0.015));
+                    activeDrag.el.style.transform = `rotate(${activeDrag.rotation + tilt}deg)`;
+                }
+            }
+
+            function onDragEnd() {
+                if (!activeDrag) return;
+                const inst = activeDrag;
+                inst.isDragging = false;
+                inst.el.classList.remove('dragging');
+                inst.el.style.transition =
+                    'box-shadow 0.3s, transform 0.35s cubic-bezier(0.25,0.8,0.25,1.2)';
+                inst.el.style.boxShadow = '';
+                if (!inst.isLocked) inst.el.style.transform = `rotate(${inst.rotation}deg)`;
+                if (!inst.moved && inst.type === 'polaroid') openViewer(inst.el, inst.index);
+                if (!inst.moved && inst.type === 'locked' && !inst.isLocked) openSpecialMessage();
+                activeDrag = null;
+            }
+
+            cardsArea.addEventListener('mousedown', e => {
+                const cardEl = e.target.closest('.paper-card') || e.target.closest('.locked-card');
+                if (!cardEl) return;
+                const inst = cardInstances.find(i => i.el === cardEl);
+                if (!inst || inst.isLocked) return;
+                e.preventDefault();
+                onDragStart(inst, e.clientX, e.clientY);
+            });
+            window.addEventListener('mousemove', e => { if (activeDrag) onDragMove(e.clientX, e.clientY); });
+            window.addEventListener('mouseup', () => { if (activeDrag) onDragEnd(); });
+
+            cardsArea.addEventListener('touchstart', e => {
+                const cardEl = e.target.closest('.paper-card') || e.target.closest('.locked-card');
+                if (!cardEl) return;
+                const inst = cardInstances.find(i => i.el === cardEl);
+                if (!inst || inst.isLocked) return;
+                e.preventDefault();
+                onDragStart(inst, e.touches[0].clientX, e.touches[0].clientY);
+            }, { passive: false });
+            window.addEventListener('touchmove', e => {
+                if (activeDrag && e.touches[0]) { e.preventDefault();
+                    onDragMove(e.touches[0].clientX, e.touches[0].clientY); }
+            }, { passive: false });
+            window.addEventListener('touchend', () => { if (activeDrag) onDragEnd(); });
+
+            // ── CINEMATIC ──
+            function openSpecialMessage() {
+                cinematicText.innerHTML =
+                    `<span class="handwritten-heading">A little note</span><p>Because birthdays come every year.<br><br>But effort should feel personal.</p>`;
+                cinematicBtn.textContent = 'Continue →';
+                cinematicBtn.style.display = 'inline-block';
+                cinematicOverlay.classList.add('active');
+                cinematicBtn.onclick = () => openFinalLetter();
+            }
+
+            function openFinalLetter() {
+                cinematicText.innerHTML =
+                    `<span class="handwritten-heading">For You</span><p>I don't know if this website is perfect.<br><br>But I wanted to make something that was yours.<br><br>Not a template. Not a forwarded message.<br><br>Just a small thing made only for you.<br><br>Happy Birthday, Ms. Nain ❤️</p>`;
+                cinematicBtn.textContent = 'One More Thing...';
+                cinematicBtn.onclick = () => openPersonalMessage();
+            }
+
+            function openPersonalMessage() {
+                cinematicText.innerHTML =
+                    `<span class="handwritten-heading">One More Thing...</span><p>Past me jo bhi hua uske liye sorry.<br><br>For my behaviour, for my mistakes,<br>aur un baaton ke liye jo shayad<br>nahi honi chahiye thi.<br><br>Bas itna hi kehna tha.<br><br>Happy Birthday, Ms. Nain ❤️</p>`;
+                cinematicBtn.textContent = '❤️ Close';
+                cinematicBtn.onclick = () => {
+                    cinematicOverlay.classList.remove('active');
+                    cinematicText.innerHTML = '';
+                };
+            }
+            cinematicOverlay.addEventListener('click', e => {
+                if (e.target === cinematicOverlay) { cinematicOverlay.classList.remove('active'); }
+            });
+
+            // ── TYPEWRITER INTRO ──
+            function typewriter(el, text, speed = 40, onDone = null) {
+                el.textContent = '';
+                let i = 0;
+                const t = setInterval(() => {
+                    if (i < text.length) { el.textContent += text[i];
+                        i++; } else { clearInterval(t); if (onDone) setTimeout(onDone,
+                        400); }
+                }, speed);
+            }
+
+            function startIntro() {
+                introScreenEl = document.createElement('div');
+                introScreenEl.id = 'introScreen';
+                const typeEl = document.createElement('div');
+                typeEl.className = 'typewriter-text';
+                introScreenEl.appendChild(typeEl);
+                document.body.appendChild(introScreenEl);
+                requestAnimationFrame(() => { introScreenEl.style.opacity = '1'; });
+                const msg =
+                    'Log usually gifts dete hain.\n\nMujhe samajh nahi aaya kya du.\n\nTo maine ye bana diya ❤️';
+                setTimeout(() => {
+                    typewriter(typeEl, msg, 42, () => {
+                        setTimeout(() => {
+                            if (introScreenEl) introScreenEl.style.opacity = '0';
+                            setTimeout(() => {
+                                if (introScreenEl) { introScreenEl.remove();
+                                    introScreenEl = null; }
+                                showMainScreen();
+                            }, 800);
+                        }, 1400);
+                    });
+                }, 200);
+            }
+
+            function showMainScreen() {
+                deskHeader.classList.add('active');
+                buildStringLights();
+                buildCornerDecos();
+                buildScatteredDecos();
+                buildBalloons();
+                buildCards();
+            }
+
+            document.getElementById('openScrapbookBtn').addEventListener('click', () => {
+                welcomeScreen.classList.add('hidden');
+                startIntro();
+            });
+
+            // ── RESIZE ──
+            let resizeTimeout;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(() => {
+                    buildStringLights();
+                    cardInstances.forEach(inst => {
+                        const c = clampPos(inst.currentLeft, inst.currentTop, inst.el);
+                        inst.currentLeft = c.left;
+                        inst.currentTop = c.top;
+                        inst.el.style.left = c.left + 'px';
+                        inst.el.style.top = c.top + 'px';
+                    });
+                    addTapeDecorations();
+                    // Reposition arrows if locked card exists
+                    if (lockedCardInst) {
+                        const lkEl = lockedCardInst.el;
+                        const lkW = lkEl.offsetWidth || 135;
+                        const a1 = document.getElementById('arrow1');
+                        const a2 = document.getElementById('arrow2');
+                        if (a1) { a1.style.left = (lockedCardInst.currentLeft - 34) + 'px';
+                            a1.style.top = (lockedCardInst.currentTop - 16) + 'px'; }
+                        if (a2) { a2.style.left = (lockedCardInst.currentLeft + lkW + 4) + 'px';
+                            a2.style.top = (lockedCardInst.currentTop - 16) + 'px'; }
+                    }
+                }, 400);
+            });
+
+            passInput.focus();
+            console.log('🌸 For Ms. Nain ❤️ — A handcrafted memory board');
+        })();
     </script>
 </body>
 </html>
