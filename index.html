@@ -710,6 +710,30 @@ body{
   .lb-cnt img{max-width:86vw;}
   .cin-h{font-size:1.5rem;}
   .cin-b{font-size:0.85rem; line-height:1.7;}
+  
+  /* ─────────────────────────────────────────
+     MOBILE FIX FOR POLAROID IMAGE OVERFLOW
+     Uses padding-bottom trick to strictly enforce 
+     4:5 aspect ratio without relying on 'aspect-ratio'
+     property which fails on some mobile browsers.
+  ───────────────────────────────────────── */
+  .pol-img {
+    width: calc(100% - 14px) !important;
+    height: 0 !important;
+    padding-bottom: 125% !important; /* 5/4 ratio = 125% */
+    position: relative !important;
+    overflow: hidden !important;
+    aspect-ratio: unset !important;
+  }
+  .pol-img img {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center !important;
+  }
 }
 </style>
 </head>
