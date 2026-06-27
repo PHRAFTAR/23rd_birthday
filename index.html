@@ -662,9 +662,23 @@ body{
   position:relative;border-radius:3px;
   background:#fdfcf5;padding:9px 9px 30px;
   box-shadow:0 0 80px rgba(220,170,140,0.42),0 22px 64px rgba(0,0,0,0.5);
-  transform-origin:center;will-change:transform,opacity;max-width:85vw;
+  transform-origin:center;will-change:transform,opacity;
+  max-width:90vw;
+  max-height:85vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
 }
-.lb-cnt img{display:block;max-width:72vw;max-height:70vh;border-radius:2px;object-fit:contain;}
+.lb-cnt img{
+  display:block;
+  max-width:100%;
+  max-height:calc(80vh - 50px); /* Strictly bound height to stay inside frame */
+  width:auto;
+  height:auto;
+  border-radius:2px;
+  object-fit:contain;
+}
 .lb-cap{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);color:#8a7060;font-family:'Kalam',cursive;font-size:0.72rem;white-space:nowrap;pointer-events:none;animation:capIn 0.5s ease;}
 @keyframes capIn{from{opacity:0;transform:translateX(-50%) translateY(6px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}
 
@@ -720,7 +734,6 @@ body{
   .lk-title{font-size:2.1rem;}
   #scrapbookBtn{padding:14px 35px; font-size:1.25rem;}
   .wc-name-row{font-size:1.6rem;}
-  .lb-cnt img{max-width:86vw;}
   .cin-h{font-size:1.5rem;}
   .cin-b{font-size:0.85rem; line-height:1.7;}
 }
