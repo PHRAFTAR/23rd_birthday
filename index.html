@@ -363,7 +363,7 @@ body{
 }
 
 /* ══════════════════════════════════════════
-   PREMIUM BUTTERFLY SYSTEM (HIGH VISIBILITY)
+   PREMIUM BUTTERFLY SYSTEM (CINEMATIC)
 ══════════════════════════════════════════ */
 .butterfly-svg {
   position: fixed;
@@ -374,7 +374,7 @@ body{
   z-index: 450;
   opacity: 0;
   will-change: transform;
-  filter: drop-shadow(0px 3px 4px rgba(80, 40, 20, 0.25));
+  filter: drop-shadow(0px 4px 6px rgba(80, 40, 20, 0.2));
 }
 
 @media (max-width: 600px) {
@@ -384,20 +384,60 @@ body{
   }
 }
 
-.butterfly-svg .wings {
-  transform-origin: 50px 70px;
-  animation: flutter 0.6s infinite alternate ease-in-out; 
+/* 3D Wing Rotations */
+.butterfly-svg .wings .wing-left {
+  transform-origin: 50px 65px;
+  animation: flutter-left 0.6s infinite alternate ease-in-out;
 }
-.butterfly-svg.landed .wings {
-  animation: flutter-landed 3.5s infinite alternate ease-in-out; 
+.butterfly-svg .wings .wing-right {
+  transform-origin: 50px 65px;
+  animation: flutter-right 0.6s infinite alternate ease-in-out;
 }
-@keyframes flutter {
-  0% { transform: scaleX(1); }
-  100% { transform: scaleX(0.55); } 
+.butterfly-svg.landed .wings .wing-left {
+  animation: flutter-left-landed 3.5s infinite alternate ease-in-out;
 }
-@keyframes flutter-landed {
-  0% { transform: scaleX(1); }
-  100% { transform: scaleX(0.75); } 
+.butterfly-svg.landed .wings .wing-right {
+  animation: flutter-right-landed 3.5s infinite alternate ease-in-out;
+}
+
+@keyframes flutter-left {
+  0% { transform: perspective(120px) rotateY(-10deg); }
+  100% { transform: perspective(120px) rotateY(-75deg); }
+}
+@keyframes flutter-right {
+  0% { transform: perspective(120px) rotateY(10deg); }
+  100% { transform: perspective(120px) rotateY(75deg); }
+}
+@keyframes flutter-left-landed {
+  0% { transform: perspective(120px) rotateY(-15deg); }
+  100% { transform: perspective(120px) rotateY(-35deg); }
+}
+@keyframes flutter-right-landed {
+  0% { transform: perspective(120px) rotateY(15deg); }
+  100% { transform: perspective(120px) rotateY(35deg); }
+}
+
+/* Golden Variant CSS Overrides */
+.butterfly-svg.golden #rg-wing stop:nth-child(1) { stop-color: #FFF8DC; }
+.butterfly-svg.golden #rg-wing stop:nth-child(2) { stop-color: #F8E79A; }
+.butterfly-svg.golden #rg-wing stop:nth-child(3) { stop-color: #D4AF37; }
+.butterfly-svg.golden #rg-body stop:nth-child(1) { stop-color: #5C4400; }
+.butterfly-svg.golden #rg-body stop:nth-child(2) { stop-color: #3A2800; }
+.butterfly-svg.golden { filter: drop-shadow(0px 4px 8px rgba(255, 200, 50, 0.4)); }
+
+/* Butterfly Sparkle Trail */
+.btf-trail {
+  position: fixed;
+  pointer-events: none;
+  z-index: 449;
+  border-radius: 50%;
+  opacity: 0.8;
+  filter: blur(0.5px);
+  animation: btfTrailFade 1.5s ease-out forwards;
+}
+@keyframes btfTrailFade {
+  0% { opacity: 0.8; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-20px) scale(0.2); }
 }
 
 /* ══════════════════════════════════════════
@@ -899,11 +939,12 @@ ss.textContent='@keyframes shakeIn{0%,100%{transform:translateX(0)}20%{transform
 document.head.appendChild(ss);
 
 // ══════════════════════════════════════════
-// PREMIUM BUTTERFLY SYSTEM 
+// PREMIUM BUTTERFLY SYSTEM (CINEMATIC)
 // ═══════════════════════════════════════════
 const butterflyPool = [];
 let butterflyActiveCount = 0;
 let butterflyTransitioning = false;
+const trailColors = ['#FFF0E5', '#E8B4A0', '#D4AF37', '#FFF8DC'];
 
 function initButterflies() {
   for(let i=0; i<3; i++) {
@@ -911,21 +952,34 @@ function initButterflies() {
     b.classList.add('butterfly-svg');
     b.setAttribute('viewBox', '0 0 100 120');
     b.innerHTML = `
+      <defs>
+        <linearGradient id="rg-wing" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#FFF0E5"/>
+          <stop offset="40%" stop-color="#E8B4A0"/>
+          <stop offset="100%" stop-color="#B76E79"/>
+        </linearGradient>
+        <linearGradient id="rg-body" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#5A3A38"/>
+          <stop offset="100%" stop-color="#3A2422"/>
+        </linearGradient>
+      </defs>
       <g class="wings">
-        <path d="M48,60 C20,20 5,35 10,55 C15,70 30,75 48,65 Z" fill="#f4b8c4" stroke="#8b3a4a" stroke-width="1.5" stroke-linejoin="round"/>
-        <path d="M52,60 C80,20 95,35 90,55 C85,70 70,75 52,65 Z" fill="#f4b8c4" stroke="#8b3a4a" stroke-width="1.5" stroke-linejoin="round"/>
-        <path d="M48,65 C30,80 25,95 35,105 C42,100 48,85 48,65 Z" fill="#e6c4ff" stroke="#6b3a8b" stroke-width="1.5" stroke-linejoin="round"/>
-        <path d="M52,65 C70,80 75,95 65,105 C58,100 52,85 52,65 Z" fill="#e6c4ff" stroke="#6b3a8b" stroke-width="1.5" stroke-linejoin="round"/>
-        <circle cx="25" cy="45" r="2" fill="#8b3a4a" opacity="0.8"/>
-        <circle cx="75" cy="45" r="2" fill="#8b3a4a" opacity="0.8"/>
-        <circle cx="32" cy="90" r="1.5" fill="#6b3a8b" opacity="0.8"/>
-        <circle cx="68" cy="90" r="1.5" fill="#6b3a8b" opacity="0.8"/>
+        <g class="wing-left">
+          <path d="M48,60 C20,20 5,35 10,55 C15,70 30,75 48,65 Z" fill="url(#rg-wing)" stroke="#8B5A4A" stroke-width="0.5" opacity="0.9"/>
+          <path d="M48,65 C30,80 25,95 35,105 C42,100 48,85 48,65 Z" fill="url(#rg-wing)" stroke="#8B5A4A" stroke-width="0.5" opacity="0.8"/>
+          <path d="M48,65 Q30,50 15,45 M48,65 Q35,60 25,60 M48,65 Q35,75 30,90" stroke="#8B5A4A" stroke-width="0.5" fill="none" opacity="0.4"/>
+        </g>
+        <g class="wing-right">
+          <path d="M52,60 C80,20 95,35 90,55 C85,70 70,75 52,65 Z" fill="url(#rg-wing)" stroke="#8B5A4A" stroke-width="0.5" opacity="0.9"/>
+          <path d="M52,65 C70,80 75,95 65,105 C58,100 52,85 52,65 Z" fill="url(#rg-wing)" stroke="#8B5A4A" stroke-width="0.5" opacity="0.8"/>
+          <path d="M52,65 Q70,50 85,45 M52,65 Q65,60 75,60 M52,65 Q65,75 70,90" stroke="#8B5A4A" stroke-width="0.5" fill="none" opacity="0.4"/>
+        </g>
       </g>
-      <path d="M50,35 Q47,60 50,105 Q53,60 50,35 Z" fill="#3a1a0a" stroke="#2a1205" stroke-width="1"/>
-      <path d="M50,35 Q45,15 40,12" stroke="#3a1a0a" stroke-width="1.2" fill="none" stroke-linecap="round"/>
-      <path d="M50,35 Q55,15 60,12" stroke="#3a1a0a" stroke-width="1.2" fill="none" stroke-linecap="round"/>
-      <circle cx="40" cy="12" r="1.5" fill="#3a1a0a"/>
-      <circle cx="60" cy="12" r="1.5" fill="#3a1a0a"/>
+      <path d="M50,35 Q47,60 50,105 Q53,60 50,35 Z" fill="url(#rg-body)"/>
+      <path d="M50,35 Q45,15 40,12" stroke="#3A2422" stroke-width="1" fill="none" stroke-linecap="round"/>
+      <path d="M50,35 Q55,15 60,12" stroke="#3A2422" stroke-width="1" fill="none" stroke-linecap="round"/>
+      <circle cx="40" cy="12" r="1.5" fill="#3A2422"/>
+      <circle cx="60" cy="12" r="1.5" fill="#3A2422"/>
     `;
     document.body.appendChild(b);
     butterflyPool.push({el: b, active: false, lastX: 0, lastY: 0});
@@ -946,15 +1000,31 @@ function getButterfly() {
 
 function releaseButterfly(b) {
   b.active = false;
+  b.el.style.transition = 'opacity 0.5s ease';
   b.el.style.opacity = 0;
   b.el.classList.remove('landed', 'golden');
   butterflyActiveCount--;
+  setTimeout(() => { b.el.style.transition = 'none'; }, 500);
+}
+
+function spawnSparkleTrail(x, y) {
+  const p = document.createElement('div');
+  p.className = 'btf-trail';
+  const size = 2 + Math.random() * 3;
+  p.style.width = size + 'px';
+  p.style.height = size + 'px';
+  p.style.left = (x + (Math.random() * 10 - 5)) + 'px';
+  p.style.top = (y + (Math.random() * 10 - 5)) + 'px';
+  p.style.background = trailColors[Math.floor(Math.random() * trailColors.length)];
+  document.body.appendChild(p);
+  setTimeout(() => p.remove(), 1500);
 }
 
 function flyButterfly(b, p0, p1, p2, p3, duration, onComplete) {
   b.el.style.opacity = 1;
   b.el.style.transition = 'none';
   const startTime = performance.now();
+  let trailParticleTimer = 0;
 
   function animate(time) {
     let rawT = (time - startTime) / duration;
@@ -975,21 +1045,44 @@ function flyButterfly(b, p0, p1, p2, p3, duration, onComplete) {
     const dy = 3 * uu * (p1.y - p0.y) + 6 * u * t * (p2.y - p1.y) + 3 * tt * (p3.y - p2.y);
     let angle = Math.atan2(dy, dx) * 180 / Math.PI;
     
-    const driftX = Math.sin(time * 0.002) * 3; 
-    const driftY = Math.cos(time * 0.003) * 6; 
+    const driftX = Math.sin(time * 0.001) * 4; 
+    const driftY = Math.cos(time * 0.0015) * 6;
+    const bank = Math.sin(time * 0.002) * 5;
 
     b.lastX = x + driftX;
     b.lastY = y + driftY;
 
-    const bank = Math.sin(time * 0.004) * 4;
-
     b.el.style.transform = `translate3d(${b.lastX}px, ${b.lastY}px, 0) rotate(${angle + 90 + bank}deg)`;
+
+    if (time - trailParticleTimer > 80) {
+      spawnSparkleTrail(b.lastX, b.lastY);
+      trailParticleTimer = time;
+    }
 
     if (rawT < 1) {
       requestAnimationFrame(animate);
     } else {
-      if (onComplete) onComplete();
+      onComplete();
     }
+  }
+  requestAnimationFrame(animate);
+}
+
+function hoverButterfly(b, x, y, duration, onComplete) {
+  const startTime = performance.now();
+  function animate(time) {
+    let t = (time - startTime) / duration;
+    if (t > 1) t = 1;
+    
+    const hoverY = Math.sin(t * Math.PI * 2) * 5; 
+    const swayX = Math.cos(t * Math.PI * 2) * 2;
+    
+    b.lastX = x + swayX;
+    b.lastY = y + hoverY;
+    b.el.style.transform = `translate3d(${b.lastX}px, ${b.lastY}px, 0) rotate(85deg)`; 
+    
+    if (t < 1) requestAnimationFrame(animate);
+    else onComplete();
   }
   requestAnimationFrame(animate);
 }
@@ -997,27 +1090,20 @@ function flyButterfly(b, p0, p1, p2, p3, duration, onComplete) {
 function restButterfly(b, landX, landY, restAngle, duration, onComplete) {
   b.el.classList.add('landed');
   const startTime = performance.now();
-  
   function animate(time) {
     let t = (time - startTime) / duration;
     if (t > 1) t = 1;
     
-    const bouncePhase = (time - startTime) / 800;
-    const bounceY = bouncePhase < 1 ? Math.sin(bouncePhase * Math.PI) * 3 : 0;
-
-    const swayX = Math.sin(time * 0.001) * 1.5;
-    const swayY = Math.cos(time * 0.0008) * 1.5 + bounceY;
-    const swayRot = Math.sin(time * 0.0012) * 3;
+    const swayX = Math.sin(time * 0.001) * 2;
+    const swayY = Math.cos(time * 0.0008) * 2;
+    const swayRot = Math.sin(time * 0.0012) * 4;
     
     b.lastX = landX + swayX;
     b.lastY = landY + swayY;
     b.el.style.transform = `translate3d(${b.lastX}px, ${b.lastY}px, 0) rotate(${restAngle + swayRot}deg)`;
     
-    if (t < 1) {
-      requestAnimationFrame(animate);
-    } else {
-      onComplete();
-    }
+    if (t < 1) requestAnimationFrame(animate);
+    else onComplete();
   }
   requestAnimationFrame(animate);
 }
@@ -1035,17 +1121,13 @@ function triggerPhotoButterfly(el, idx) {
   const rect = el.getBoundingClientRect();
   const start = { x: rect.left + rect.width/2, y: rect.top + rect.height/2 };
   
-  const end = { 
-    x: start.x + (Math.random() * 200 - 100), 
-    y: start.y - 250 - Math.random() * 100 
-  };
-  
-  const cp1 = { x: start.x + (Math.random() * 100 - 50), y: start.y - 80 };
-  const cp2 = { x: end.x + (Math.random() * 100 - 50), y: end.y + 100 };
+  const end = { x: start.x + (Math.random() * 100 - 50), y: start.y - 250 };
+  const cp1 = { x: start.x + (Math.random() * 50 - 25), y: start.y - 80 };
+  const cp2 = { x: end.x + (Math.random() * 50 - 25), y: end.y + 100 };
 
   b.el.style.opacity = 0;
   b.el.style.transform = `translate3d(${start.x}px, ${start.y}px, 0) scale(0) rotate(0deg)`;
-  b.el.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease';
+  b.el.style.transition = 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease';
   
   requestAnimationFrame(() => {
     b.el.style.opacity = 1;
@@ -1054,24 +1136,28 @@ function triggerPhotoButterfly(el, idx) {
 
   setTimeout(() => {
     b.el.style.transition = 'none';
-    const duration = 1800 + Math.random() * 400;
+    const duration = 1400; 
     flyButterfly(b, start, cp1, cp2, end, duration, () => {
       releaseButterfly(b);
       butterflyTransitioning = false;
-      busy = false; 
-      openViewer(el, idx); 
     });
-  }, 280);
+    
+    // Open viewer midway through flight for seamless transition
+    setTimeout(() => {
+      busy = false; 
+      openViewer(el, idx);
+    }, 800);
+  }, 380);
 }
 
-// PART 2: RANDOM LANDING BUTTERFLY (UPDATED FREQUENCY: 14-15s)
+// PART 2: RANDOM LANDING BUTTERFLY (12-18s)
 function scheduleRandomButterfly() {
-  const delay = 14000 + Math.random() * 1000; // 14s - 15s
+  const delay = 12000 + Math.random() * 6000; // 12s - 18s
   setTimeout(() => {
     const isInterrupted = busy || lightbox.classList.contains('active') || cinematic.classList.contains('active') || dragging;
     
     if (!isInterrupted && butterflyActiveCount < 3) {
-      const spawnCount = Math.random() < 0.22 ? 2 : 1; 
+      const spawnCount = Math.random() < 0.25 ? 2 : 1; 
       for(let i=0; i<spawnCount; i++) {
         if(butterflyActiveCount < 3) {
           spawnRandomLandingButterfly();
@@ -1107,37 +1193,34 @@ function spawnRandomLandingButterfly() {
   }
 
   const landPoint = { x: landX, y: landY };
-
   const startSide = Math.random() > 0.5 ? -50 : window.innerWidth + 50;
   const startPoint = { x: startSide, y: Math.random() * window.innerHeight };
-
   const cp1 = { x: startPoint.x + (Math.random() * 200 - 100), y: startPoint.y + (Math.random() * 200 - 100) };
   const cp2 = { x: landX + (Math.random() * 100 - 50), y: landY - 100 };
-
   const flyDuration = 3200 + Math.random() * 800; 
 
   flyButterfly(b, startPoint, cp1, cp2, landPoint, flyDuration, () => {
-    const currentTransform = b.el.style.transform;
-    const match = currentTransform.match(/rotate\(([-0-9.]+)deg\)/);
-    let currentAngle = match ? parseFloat(match[1]) : 0;
-    const restAngle = currentAngle + (Math.random() * 20 - 10);
+    // Hover before landing
+    hoverButterfly(b, landPoint.x, landPoint.y, 400, () => {
+      const currentTransform = b.el.style.transform;
+      const match = currentTransform.match(/rotate\(([-0-9.]+)deg\)/);
+      let currentAngle = match ? parseFloat(match[1]) : 0;
+      const restAngle = currentAngle + (Math.random() * 20 - 10);
+      const stayDuration = 3000 + Math.random() * 1000; 
+      
+      restButterfly(b, landPoint.x, landPoint.y, restAngle, stayDuration, () => {
+        b.el.classList.remove('landed');
+        
+        const exitSide = Math.random() > 0.5 ? -50 : window.innerWidth + 50;
+        const exitPoint = { x: exitSide, y: Math.random() * window.innerHeight };
+        const ep1 = { x: b.lastX + (Math.random() * 200 - 100), y: b.lastY - 100 };
+        const ep2 = { x: exitPoint.x + (Math.random() * 100 - 50), y: exitPoint.y + (Math.random() * 100 - 50) };
+        const exitDuration = 3200 + Math.random() * 800; 
+        const currentStartPoint = { x: b.lastX, y: b.lastY };
 
-    const stayDuration = 3000; // Exactly 3s rest as requested
-    
-    restButterfly(b, landPoint.x, landPoint.y, restAngle, stayDuration, () => {
-      b.el.classList.remove('landed');
-      
-      const exitSide = Math.random() > 0.5 ? -50 : window.innerWidth + 50;
-      const exitPoint = { x: exitSide, y: Math.random() * window.innerHeight };
-      
-      const ep1 = { x: b.lastX + (Math.random() * 200 - 100), y: b.lastY - 100 };
-      const ep2 = { x: exitPoint.x + (Math.random() * 100 - 50), y: exitPoint.y + (Math.random() * 100 - 50) };
-      
-      const exitDuration = 3200 + Math.random() * 800; 
-      const currentStartPoint = { x: b.lastX, y: b.lastY };
-
-      flyButterfly(b, currentStartPoint, ep1, ep2, exitPoint, exitDuration, () => {
-        releaseButterfly(b);
+        flyButterfly(b, currentStartPoint, ep1, ep2, exitPoint, exitDuration, () => {
+          releaseButterfly(b);
+        });
       });
     });
   });
@@ -1156,7 +1239,6 @@ function triggerGoldenButterfly() {
   
   const startSide = Math.random() > 0.5 ? -50 : window.innerWidth + 50;
   const startPoint = { x: startSide, y: Math.random() * (window.innerHeight/2) };
-
   const cp1 = { x: startPoint.x + (Math.random() * 200 - 100), y: startPoint.y + (Math.random() * 200 - 100) };
   const cp2 = { x: landPoint.x + (Math.random() * 100 - 50), y: landPoint.y - 100 };
 
@@ -1172,29 +1254,45 @@ function triggerGoldenButterfly() {
   setTimeout(() => {
     b.el.style.transition = 'none';
     flyButterfly(b, startPoint, cp1, cp2, landPoint, 3500, () => {
-      const currentTransform = b.el.style.transform;
-      const match = currentTransform.match(/rotate\(([-0-9.]+)deg\)/);
-      let currentAngle = match ? parseFloat(match[1]) : 0;
-      const restAngle = currentAngle + (Math.random() * 10 - 5);
-      
-      restButterfly(b, landPoint.x, landPoint.y, restAngle, 2500, () => {
-        b.el.classList.remove('landed');
+      hoverButterfly(b, landPoint.x, landPoint.y, 500, () => {
+        const currentTransform = b.el.style.transform;
+        const match = currentTransform.match(/rotate\(([-0-9.]+)deg\)/);
+        let currentAngle = match ? parseFloat(match[1]) : 0;
+        const restAngle = currentAngle + (Math.random() * 10 - 5);
         
-        const exitSide = Math.random() > 0.5 ? -50 : window.innerWidth + 50;
-        const exitPoint = { x: exitSide, y: Math.random() * window.innerHeight };
-        
-        const ep1 = { x: b.lastX + (Math.random() * 200 - 100), y: b.lastY - 100 };
-        const ep2 = { x: exitPoint.x + (Math.random() * 100 - 50), y: exitPoint.y + (Math.random() * 100 - 50) };
-        
-        const exitDuration = 3500;
-        const currentStartPoint = { x: b.lastX, y: b.lastY };
+        restButterfly(b, landPoint.x, landPoint.y, restAngle, 2500, () => {
+          b.el.classList.remove('landed');
+          
+          const exitSide = Math.random() > 0.5 ? -50 : window.innerWidth + 50;
+          const exitPoint = { x: exitSide, y: Math.random() * window.innerHeight };
+          const ep1 = { x: b.lastX + (Math.random() * 200 - 100), y: b.lastY - 100 };
+          const ep2 = { x: exitPoint.x + (Math.random() * 100 - 50), y: exitPoint.y + (Math.random() * 100 - 50) };
+          const exitDuration = 3500;
+          const currentStartPoint = { x: b.lastX, y: b.lastY };
 
-        flyButterfly(b, currentStartPoint, ep1, ep2, exitPoint, exitDuration, () => {
-          releaseButterfly(b);
+          flyButterfly(b, currentStartPoint, ep1, ep2, exitPoint, exitDuration, () => {
+            releaseButterfly(b);
+          });
         });
       });
     });
   }, 600);
+}
+
+// AMBIENT DECORATION SPARKLES
+function scheduleAmbientSparkle() {
+  const delay = 5000 + Math.random() * 4000; 
+  setTimeout(() => {
+    if (!busy && !lightbox.classList.contains('active') && !cinematic.classList.contains('active')) {
+      const decos = document.querySelectorAll('.deco');
+      if (decos.length > 0) {
+        const target = decos[Math.floor(Math.random() * decos.length)];
+        const rect = target.getBoundingClientRect();
+        spawnSparkleTrail(rect.left + rect.width/2, rect.top + rect.height/2);
+      }
+    }
+    scheduleAmbientSparkle();
+  }, delay);
 }
 
 initButterflies();
@@ -1699,14 +1797,6 @@ const eCSS=document.createElement('style');
 eCSS.textContent=`
 @keyframes bokehP{0%,100%{opacity:0.35;transform:scale(1);}50%{opacity:0.9;transform:scale(1.35);}}
 @keyframes starTwinkle{0%,100%{opacity:0.1;transform:scale(0.7) rotate(0deg);}50%{opacity:0.82;transform:scale(1.25) rotate(22deg);}}
-/* CSS Override for Golden Butterfly */
-.butterfly-svg.golden path[fill="#f4b8c4"] { fill: #FFD700 !important; stroke: #8B6508 !important; }
-.butterfly-svg.golden path[fill="#e6c4ff"] { fill: #FFAF00 !important; stroke: #8B6508 !important; }
-.butterfly-svg.golden circle[fill="#8b3a4a"] { fill: #8B6508 !important; }
-.butterfly-svg.golden circle[fill="#6b3a8b"] { fill: #8B6508 !important; }
-.butterfly-svg.golden path[fill="#3a1a0a"] { fill: #5C4400 !important; stroke: #3a2800 !important; }
-.butterfly-svg.golden circle[fill="#3a1a0a"] { fill: #5C4400 !important; }
-.butterfly-svg.golden { filter: drop-shadow(0px 3px 6px rgba(255, 200, 50, 0.5)); }
 `;
 document.head.appendChild(eCSS);
 
@@ -1714,6 +1804,7 @@ function showMain(){
   desk.classList.add('active');
   buildLights();buildBalloons();buildDecos();buildCards();
   scheduleRandomButterfly(); 
+  scheduleAmbientSparkle();
 }
 
 // ── DRAG-HEART UNLOCK SYSTEM
