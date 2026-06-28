@@ -23,7 +23,6 @@ body{
     radial-gradient(ellipse at 10% 85%, rgba(220,180,160,0.3) 0%, transparent 45%),
     radial-gradient(ellipse at 90% 80%, rgba(220,180,160,0.25) 0%, transparent 45%),
     radial-gradient(ellipse at 50% 50%, #f5e8dc 0%, #eeddd0 100%);
-  /* Paper grain */
   background-image:
     radial-gradient(ellipse at 50% 35%, rgba(255,240,230,0.7) 0%, transparent 60%),
     radial-gradient(ellipse at 10% 85%, rgba(220,180,160,0.3) 0%, transparent 45%),
@@ -109,7 +108,6 @@ body{
     0 4px 20px rgba(200,100,130,0.14),
     0 1px 4px rgba(200,100,130,0.08),
     inset 0 1px 0 rgba(255,255,255,0.6);
-  /* hidden by default */
   max-height:0;overflow:hidden;
   opacity:0;
   transition:max-height 0.55s cubic-bezier(0.4,0,0.2,1),
@@ -149,13 +147,11 @@ body{
   font-style:normal;
   color:#c05878;font-weight:700;
 }
-/* Animated change: fade old hint out, new hint in */
 @keyframes hintSlideIn{
   from{opacity:0;transform:translateY(6px);}
   to{opacity:1;transform:translateY(0);}
 }
 .hint-box-inner.updating{animation:hintSlideIn 0.4s ease forwards;}
-/* Decorative dots on hint box */
 .hint-box::before{
   content:'· · ·';
   display:block;font-size:0.65rem;color:rgba(200,120,150,0.5);
@@ -367,6 +363,44 @@ body{
 }
 
 /* ══════════════════════════════════════════
+   PREMIUM BUTTERFLY SYSTEM (HIGH VISIBILITY)
+══════════════════════════════════════════ */
+.butterfly-svg {
+  position: fixed;
+  top: 0; left: 0;
+  width: 38px;
+  height: 46px;
+  pointer-events: none;
+  z-index: 450;
+  opacity: 0;
+  will-change: transform;
+  filter: drop-shadow(0px 3px 4px rgba(80, 40, 20, 0.25));
+}
+
+@media (max-width: 600px) {
+  .butterfly-svg {
+    width: 32px;
+    height: 38px;
+  }
+}
+
+.butterfly-svg .wings {
+  transform-origin: 50px 70px;
+  animation: flutter 0.6s infinite alternate ease-in-out; 
+}
+.butterfly-svg.landed .wings {
+  animation: flutter-landed 3.5s infinite alternate ease-in-out; 
+}
+@keyframes flutter {
+  0% { transform: scaleX(1); }
+  100% { transform: scaleX(0.55); } 
+}
+@keyframes flutter-landed {
+  0% { transform: scaleX(1); }
+  100% { transform: scaleX(0.75); } 
+}
+
+/* ══════════════════════════════════════════
    INTRO TYPEWRITER
 ══════════════════════════════════════════ */
 #introScreen{
@@ -450,7 +484,7 @@ body{
   position: relative;
   margin: 7px 7px 0 7px;
   width: calc(100% - 14px);
-  padding-bottom: 125%; /* 4:5 Aspect Ratio - Bulletproof for mobile */
+  padding-bottom: 125%; 
   border-radius: 1px;
   overflow: hidden;
   background: linear-gradient(135deg,#ede0d4,#ddd0c4);
@@ -493,14 +527,12 @@ body{
 }
 .sticky:active{cursor:grabbing;}
 .sticky.dragging{z-index:999!important;box-shadow:0 14px 42px rgba(0,0,0,0.22)!important;}
-/* Pink torn note */
 .s-pink{
   background:#fce4ec;
   border:1px solid rgba(240,150,180,0.28);
   color:#6a1e3a;
   clip-path:polygon(0 0,100% 0,100% 86%,97% 88%,93% 86%,89% 89%,85% 86%,81% 89%,77% 86%,72% 89%,68% 86%,64% 89%,59% 86%,55% 89%,50% 86%,46% 89%,41% 86%,37% 89%,32% 86%,28% 89%,23% 86%,19% 89%,14% 86%,10% 89%,5% 86%,1% 89%,0 86%);
 }
-/* Yellow note */
 .s-yellow{
   background:#fff9c4;
   border:1px solid rgba(210,200,80,0.28);
@@ -512,7 +544,6 @@ body{
   color:#5a4210;
   clip-path:polygon(0 0,100% 0,100% 88%,97% 90%,93% 88%,89% 91%,84% 88%,80% 91%,75% 88%,71% 91%,66% 88%,62% 91%,57% 88%,53% 91%,48% 88%,44% 91%,39% 88%,35% 91%,30% 88%,25% 91%,21% 88%,16% 91%,11% 88%,7% 91%,3% 88%,0 88%);
 }
-/* Blue grid note */
 .s-blue{
   background:#e8f4fc;
   border:1px solid rgba(130,182,230,0.32);
@@ -548,7 +579,6 @@ body{
   background-image:repeating-linear-gradient(45deg,rgba(255,255,255,0.32) 0,rgba(255,255,255,0.32) 2px,transparent 2px,transparent 6px);
   border:1px solid rgba(175,130,200,0.28);
 }
-/* Heart-pattern tape (like reference) */
 .t-heart{
   background:rgba(255,175,190,0.6);
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Ctext y='10' font-size='9' opacity='0.45'%3E♡%3C/text%3E%3C/svg%3E");
@@ -603,7 +633,7 @@ body{
 .lk-sub{font-family:'Kalam',cursive;font-size:0.52rem;color:#8a6030;margin-top:5px;display:block;}
 
 /* ══════════════════════════════════════════
-   ARROW GUIDES — curved arrows like reference
+   ARROW GUIDES
 ══════════════════════════════════════════ */
 .arrow-guide{
   position:absolute;z-index:7;pointer-events:none;
@@ -653,18 +683,20 @@ body{
 .toast.show{opacity:1;transform:translateY(0);}
 
 /* ══════════════════════════════════════════
-   LIGHTBOX
+   LIGHTBOX (Master Template Popup)
 ══════════════════════════════════════════ */
 .lightbox{position:fixed;inset:0;z-index:550;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity 0.4s,visibility 0.4s;cursor:pointer;}
 .lightbox.active{opacity:1;visibility:visible;}
 .lb-ov{position:absolute;inset:0;background:rgba(10,5,2,0.75);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);}
 .lb-cnt{
   position:relative;border-radius:3px;
-  background:#fdfcf5;padding:9px 9px 30px;
+  background:#fdfcf5;
+  padding:9px 9px 30px; 
   box-shadow:0 0 80px rgba(220,170,140,0.42),0 22px 64px rgba(0,0,0,0.5);
   transform-origin:center;will-change:transform,opacity;
-  max-width:90vw;
-  max-height:85vh;
+  box-sizing:border-box;
+  width: min(82vw, 400px);
+  max-width: calc(18px + (85vh - 39px) / 1.25); 
   display:flex;
   flex-direction:column;
   align-items:center;
@@ -672,21 +704,25 @@ body{
 }
 .lb-cnt img{
   display:block;
-  max-width:100%;
-  max-height:calc(80vh - 50px); /* Strictly bound height to stay inside frame */
-  width:auto;
-  height:auto;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5; 
   border-radius:2px;
-  object-fit:contain;
+  object-fit: cover;
+  object-position: center;
 }
 .lb-cap{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);color:#8a7060;font-family:'Kalam',cursive;font-size:0.72rem;white-space:nowrap;pointer-events:none;animation:capIn 0.5s ease;}
 @keyframes capIn{from{opacity:0;transform:translateX(-50%) translateY(6px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}
 
 /* ══════════════════════════════════════════
-   SPARKLE
+   CINEMATIC SPARKLES (SLOW & SOFT)
 ══════════════════════════════════════════ */
-.sparkle{position:fixed;pointer-events:none;z-index:600;font-size:16px;animation:spkUp 2.2s linear forwards;}
-@keyframes spkUp{0%{opacity:1;transform:translateY(0) scale(1);}100%{opacity:0;transform:translateY(-120px) scale(0.1);}}
+.sparkle{position:fixed;pointer-events:none;z-index:600;font-size:16px;animation:spkUp 4s ease-in-out forwards;}
+@keyframes spkUp{
+  0% {opacity:0; transform:translateY(0) scale(1);}
+  20% {opacity:0.8;}
+  100% {opacity:0; transform:translateY(-80px) scale(0.2);}
+}
 
 /* ══════════════════════════════════════════
    CINEMATIC
@@ -754,7 +790,6 @@ body{
     <input type="text" id="accessCode" placeholder="Access Code" maxlength="20" autocomplete="off">
     <button class="lk-btn" id="submitBtn">✨ Unlock</button>
     <div class="lk-status" id="statusMsg"></div>
-    <!-- HINT SYSTEM -->
     <button class="hint-toggle" id="hintToggle">
       <span class="ht-icon">💌</span> Need a Hint?
     </button>
@@ -789,16 +824,12 @@ body{
   <div style="font-size:0.85rem;color:#8a5c3a;max-width:270px;line-height:1.6;text-align:center;font-family:'Kalam',cursive;">
     A small collection of memories<br>has been prepared for you.
   </div>
-  <!-- Premium Scrapbook Button with integrated heart slot -->
   <button id="scrapbookBtn">
     <span class="btn-text" id="btnText">✨ Open Scrapbook</span><span class="btn-slot" id="btnSlot">♡</span>
   </button>
 </div>
-<!-- Floating dragged heart -->
 <div id="floatingHeart">❤️</div>
-<!-- Heart tooltip -->
 <div id="heartTooltip">Drag my heart ❤️</div>
-<!-- Flash overlay -->
 <div id="unlockFlash"></div>
 
 <!-- DESK -->
@@ -861,11 +892,312 @@ let viewed=new Set(),busy=false,autoT=null,spkT=null,curRect=null;
 let unlocked=false,theme='light';
 const cards=[];
 let dragging=null,gZ=200,lockedCard=null;
+let goldenTriggered = false; 
 
-// shake anim
 const ss=document.createElement('style');
 ss.textContent='@keyframes shakeIn{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}';
 document.head.appendChild(ss);
+
+// ══════════════════════════════════════════
+// PREMIUM BUTTERFLY SYSTEM 
+// ═══════════════════════════════════════════
+const butterflyPool = [];
+let butterflyActiveCount = 0;
+let butterflyTransitioning = false;
+
+function initButterflies() {
+  for(let i=0; i<3; i++) {
+    const b = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    b.classList.add('butterfly-svg');
+    b.setAttribute('viewBox', '0 0 100 120');
+    b.innerHTML = `
+      <g class="wings">
+        <path d="M48,60 C20,20 5,35 10,55 C15,70 30,75 48,65 Z" fill="#f4b8c4" stroke="#8b3a4a" stroke-width="1.5" stroke-linejoin="round"/>
+        <path d="M52,60 C80,20 95,35 90,55 C85,70 70,75 52,65 Z" fill="#f4b8c4" stroke="#8b3a4a" stroke-width="1.5" stroke-linejoin="round"/>
+        <path d="M48,65 C30,80 25,95 35,105 C42,100 48,85 48,65 Z" fill="#e6c4ff" stroke="#6b3a8b" stroke-width="1.5" stroke-linejoin="round"/>
+        <path d="M52,65 C70,80 75,95 65,105 C58,100 52,85 52,65 Z" fill="#e6c4ff" stroke="#6b3a8b" stroke-width="1.5" stroke-linejoin="round"/>
+        <circle cx="25" cy="45" r="2" fill="#8b3a4a" opacity="0.8"/>
+        <circle cx="75" cy="45" r="2" fill="#8b3a4a" opacity="0.8"/>
+        <circle cx="32" cy="90" r="1.5" fill="#6b3a8b" opacity="0.8"/>
+        <circle cx="68" cy="90" r="1.5" fill="#6b3a8b" opacity="0.8"/>
+      </g>
+      <path d="M50,35 Q47,60 50,105 Q53,60 50,35 Z" fill="#3a1a0a" stroke="#2a1205" stroke-width="1"/>
+      <path d="M50,35 Q45,15 40,12" stroke="#3a1a0a" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+      <path d="M50,35 Q55,15 60,12" stroke="#3a1a0a" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+      <circle cx="40" cy="12" r="1.5" fill="#3a1a0a"/>
+      <circle cx="60" cy="12" r="1.5" fill="#3a1a0a"/>
+    `;
+    document.body.appendChild(b);
+    butterflyPool.push({el: b, active: false, lastX: 0, lastY: 0});
+  }
+}
+
+function getButterfly() {
+  for(let i=0; i<butterflyPool.length; i++) {
+    if(!butterflyPool[i].active) {
+      butterflyPool[i].active = true;
+      butterflyPool[i].el.classList.remove('golden', 'landed'); 
+      butterflyActiveCount++;
+      return butterflyPool[i];
+    }
+  }
+  return null;
+}
+
+function releaseButterfly(b) {
+  b.active = false;
+  b.el.style.opacity = 0;
+  b.el.classList.remove('landed', 'golden');
+  butterflyActiveCount--;
+}
+
+function flyButterfly(b, p0, p1, p2, p3, duration, onComplete) {
+  b.el.style.opacity = 1;
+  b.el.style.transition = 'none';
+  const startTime = performance.now();
+
+  function animate(time) {
+    let rawT = (time - startTime) / duration;
+    if (rawT > 1) rawT = 1;
+    
+    let t = rawT < 0.5 ? 4 * rawT * rawT * rawT : 1 - Math.pow(-2 * rawT + 2, 3) / 2;
+
+    const u = 1 - t;
+    const tt = t * t;
+    const uu = u * u;
+    const uuu = uu * u;
+    const ttt = tt * t;
+
+    const x = uuu * p0.x + 3 * uu * t * p1.x + 3 * u * tt * p2.x + ttt * p3.x;
+    const y = uuu * p0.y + 3 * uu * t * p1.y + 3 * u * tt * p2.y + ttt * p3.y;
+
+    const dx = 3 * uu * (p1.x - p0.x) + 6 * u * t * (p2.x - p1.x) + 3 * tt * (p3.x - p2.x);
+    const dy = 3 * uu * (p1.y - p0.y) + 6 * u * t * (p2.y - p1.y) + 3 * tt * (p3.y - p2.y);
+    let angle = Math.atan2(dy, dx) * 180 / Math.PI;
+    
+    const driftX = Math.sin(time * 0.002) * 3; 
+    const driftY = Math.cos(time * 0.003) * 6; 
+
+    b.lastX = x + driftX;
+    b.lastY = y + driftY;
+
+    const bank = Math.sin(time * 0.004) * 4;
+
+    b.el.style.transform = `translate3d(${b.lastX}px, ${b.lastY}px, 0) rotate(${angle + 90 + bank}deg)`;
+
+    if (rawT < 1) {
+      requestAnimationFrame(animate);
+    } else {
+      if (onComplete) onComplete();
+    }
+  }
+  requestAnimationFrame(animate);
+}
+
+function restButterfly(b, landX, landY, restAngle, duration, onComplete) {
+  b.el.classList.add('landed');
+  const startTime = performance.now();
+  
+  function animate(time) {
+    let t = (time - startTime) / duration;
+    if (t > 1) t = 1;
+    
+    const bouncePhase = (time - startTime) / 800;
+    const bounceY = bouncePhase < 1 ? Math.sin(bouncePhase * Math.PI) * 3 : 0;
+
+    const swayX = Math.sin(time * 0.001) * 1.5;
+    const swayY = Math.cos(time * 0.0008) * 1.5 + bounceY;
+    const swayRot = Math.sin(time * 0.0012) * 3;
+    
+    b.lastX = landX + swayX;
+    b.lastY = landY + swayY;
+    b.el.style.transform = `translate3d(${b.lastX}px, ${b.lastY}px, 0) rotate(${restAngle + swayRot}deg)`;
+    
+    if (t < 1) {
+      requestAnimationFrame(animate);
+    } else {
+      onComplete();
+    }
+  }
+  requestAnimationFrame(animate);
+}
+
+// PART 1: PHOTO CLICK BUTTERFLY
+function triggerPhotoButterfly(el, idx) {
+  const b = getButterfly();
+  if (!b) {
+    butterflyTransitioning = false;
+    busy = false;
+    openViewer(el, idx); 
+    return;
+  }
+
+  const rect = el.getBoundingClientRect();
+  const start = { x: rect.left + rect.width/2, y: rect.top + rect.height/2 };
+  
+  const end = { 
+    x: start.x + (Math.random() * 200 - 100), 
+    y: start.y - 250 - Math.random() * 100 
+  };
+  
+  const cp1 = { x: start.x + (Math.random() * 100 - 50), y: start.y - 80 };
+  const cp2 = { x: end.x + (Math.random() * 100 - 50), y: end.y + 100 };
+
+  b.el.style.opacity = 0;
+  b.el.style.transform = `translate3d(${start.x}px, ${start.y}px, 0) scale(0) rotate(0deg)`;
+  b.el.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease';
+  
+  requestAnimationFrame(() => {
+    b.el.style.opacity = 1;
+    b.el.style.transform = `translate3d(${start.x}px, ${start.y}px, 0) scale(1) rotate(90deg)`;
+  });
+
+  setTimeout(() => {
+    b.el.style.transition = 'none';
+    const duration = 1800 + Math.random() * 400;
+    flyButterfly(b, start, cp1, cp2, end, duration, () => {
+      releaseButterfly(b);
+      butterflyTransitioning = false;
+      busy = false; 
+      openViewer(el, idx); 
+    });
+  }, 280);
+}
+
+// PART 2: RANDOM LANDING BUTTERFLY (UPDATED FREQUENCY: 14-15s)
+function scheduleRandomButterfly() {
+  const delay = 14000 + Math.random() * 1000; // 14s - 15s
+  setTimeout(() => {
+    const isInterrupted = busy || lightbox.classList.contains('active') || cinematic.classList.contains('active') || dragging;
+    
+    if (!isInterrupted && butterflyActiveCount < 3) {
+      const spawnCount = Math.random() < 0.22 ? 2 : 1; 
+      for(let i=0; i<spawnCount; i++) {
+        if(butterflyActiveCount < 3) {
+          spawnRandomLandingButterfly();
+        }
+      }
+    }
+    scheduleRandomButterfly();
+  }, delay);
+}
+
+function spawnRandomLandingButterfly() {
+  if (butterflyActiveCount >= 3) return; 
+
+  const b = getButterfly();
+  if (!b) return;
+
+  const targets = ['.sticky', '.tape', '.polaroid', '.balloon', '.deco', '#hdr'];
+  const targetSel = targets[Math.floor(Math.random() * targets.length)];
+  const targetEls = document.querySelectorAll(targetSel);
+  
+  if (targetEls.length === 0) return;
+  const targetEl = targetEls[Math.floor(Math.random() * targetEls.length)];
+  
+  const rect = targetEl.getBoundingClientRect();
+  
+  let landX = rect.left + Math.random() * rect.width;
+  let landY = rect.top + Math.random() * rect.height;
+
+  // Never land on the actual photograph inside the polaroid
+  if (targetSel === '.polaroid') {
+    landY = rect.top + (rect.height * 0.85) + (Math.random() * (rect.height * 0.15));
+    landX = rect.left + (rect.width * 0.2) + (Math.random() * (rect.width * 0.6));
+  }
+
+  const landPoint = { x: landX, y: landY };
+
+  const startSide = Math.random() > 0.5 ? -50 : window.innerWidth + 50;
+  const startPoint = { x: startSide, y: Math.random() * window.innerHeight };
+
+  const cp1 = { x: startPoint.x + (Math.random() * 200 - 100), y: startPoint.y + (Math.random() * 200 - 100) };
+  const cp2 = { x: landX + (Math.random() * 100 - 50), y: landY - 100 };
+
+  const flyDuration = 3200 + Math.random() * 800; 
+
+  flyButterfly(b, startPoint, cp1, cp2, landPoint, flyDuration, () => {
+    const currentTransform = b.el.style.transform;
+    const match = currentTransform.match(/rotate\(([-0-9.]+)deg\)/);
+    let currentAngle = match ? parseFloat(match[1]) : 0;
+    const restAngle = currentAngle + (Math.random() * 20 - 10);
+
+    const stayDuration = 3000; // Exactly 3s rest as requested
+    
+    restButterfly(b, landPoint.x, landPoint.y, restAngle, stayDuration, () => {
+      b.el.classList.remove('landed');
+      
+      const exitSide = Math.random() > 0.5 ? -50 : window.innerWidth + 50;
+      const exitPoint = { x: exitSide, y: Math.random() * window.innerHeight };
+      
+      const ep1 = { x: b.lastX + (Math.random() * 200 - 100), y: b.lastY - 100 };
+      const ep2 = { x: exitPoint.x + (Math.random() * 100 - 50), y: exitPoint.y + (Math.random() * 100 - 50) };
+      
+      const exitDuration = 3200 + Math.random() * 800; 
+      const currentStartPoint = { x: b.lastX, y: b.lastY };
+
+      flyButterfly(b, currentStartPoint, ep1, ep2, exitPoint, exitDuration, () => {
+        releaseButterfly(b);
+      });
+    });
+  });
+}
+
+// PART 7: FINAL MEMORY GOLDEN BUTTERFLY
+function triggerGoldenButterfly() {
+  const b = getButterfly();
+  if (!b) return;
+  
+  b.el.classList.add('golden');
+  
+  const targetEl = document.getElementById('lockedEl');
+  const rect = targetEl.getBoundingClientRect();
+  const landPoint = { x: rect.left + rect.width/2, y: rect.top + rect.height/2 };
+  
+  const startSide = Math.random() > 0.5 ? -50 : window.innerWidth + 50;
+  const startPoint = { x: startSide, y: Math.random() * (window.innerHeight/2) };
+
+  const cp1 = { x: startPoint.x + (Math.random() * 200 - 100), y: startPoint.y + (Math.random() * 200 - 100) };
+  const cp2 = { x: landPoint.x + (Math.random() * 100 - 50), y: landPoint.y - 100 };
+
+  b.el.style.opacity = 0;
+  b.el.style.transform = `translate3d(${startPoint.x}px, ${startPoint.y}px, 0) scale(0)`;
+  b.el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+  
+  requestAnimationFrame(() => {
+    b.el.style.opacity = 1;
+    b.el.style.transform = `translate3d(${startPoint.x}px, ${startPoint.y}px, 0) scale(1)`;
+  });
+
+  setTimeout(() => {
+    b.el.style.transition = 'none';
+    flyButterfly(b, startPoint, cp1, cp2, landPoint, 3500, () => {
+      const currentTransform = b.el.style.transform;
+      const match = currentTransform.match(/rotate\(([-0-9.]+)deg\)/);
+      let currentAngle = match ? parseFloat(match[1]) : 0;
+      const restAngle = currentAngle + (Math.random() * 10 - 5);
+      
+      restButterfly(b, landPoint.x, landPoint.y, restAngle, 2500, () => {
+        b.el.classList.remove('landed');
+        
+        const exitSide = Math.random() > 0.5 ? -50 : window.innerWidth + 50;
+        const exitPoint = { x: exitSide, y: Math.random() * window.innerHeight };
+        
+        const ep1 = { x: b.lastX + (Math.random() * 200 - 100), y: b.lastY - 100 };
+        const ep2 = { x: exitPoint.x + (Math.random() * 100 - 50), y: exitPoint.y + (Math.random() * 100 - 50) };
+        
+        const exitDuration = 3500;
+        const currentStartPoint = { x: b.lastX, y: b.lastY };
+
+        flyButterfly(b, currentStartPoint, ep1, ep2, exitPoint, exitDuration, () => {
+          releaseButterfly(b);
+        });
+      });
+    });
+  }, 600);
+}
+
+initButterflies();
 
 // ── THEME
 themeBtn.addEventListener('click',()=>{
@@ -881,27 +1213,13 @@ let wrongAttempts = 0;
 let hintOpen = false;
 
 const HINTS = [
-  {
-    label: "💌 Hint",
-    html: "The password follows:<br><strong>FIRST NAME + DDMM</strong>"
-  },
-  {
-    label: "💌 Hint",
-    html: "Use only the <em>first name</em>.<br>Then add the birthday in <strong>DDMM</strong> format."
-  },
-  {
-    label: "💌 Hint",
-    html: "Example format only:<br><strong>PRIYA1508</strong><br><span style='font-size:0.72rem;opacity:0.7'>(This is just an example, not the real password)</span>"
-  },
-  {
-    label: "💌 You're very close...",
-    html: "Think of:<br><em>FIRST NAME</em> + <em>DDMM</em> ❤️<br><span style='font-size:0.72rem;opacity:0.7'>You know whose name and birthday this is 🌸</span>"
-  }
+  { label: "💌 Hint", html: "The password follows:<br><strong>FIRST NAME + DDMM</strong>" },
+  { label: "💌 Hint", html: "Use only the <em>first name</em>.<br>Then add the birthday in <strong>DDMM</strong> format." },
+  { label: "💌 Hint", html: "Example format only:<br><strong>PRIYA1508</strong><br><span style='font-size:0.72rem;opacity:0.7'>(This is just an example, not the real password)</span>" },
+  { label: "💌 You're very close...", html: "Think of:<br><em>FIRST NAME</em> + <em>DDMM</em> ❤️<br><span style='font-size:0.72rem;opacity:0.7'>You know whose name and birthday this is 🌸</span>" }
 ];
 
-function getHintLevel(){
-  return Math.min(wrongAttempts, HINTS.length - 1);
-}
+function getHintLevel(){ return Math.min(wrongAttempts, HINTS.length - 1); }
 
 function updateHintContent(animate){
   const level = getHintLevel();
@@ -911,7 +1229,7 @@ function updateHintContent(animate){
   const hintLabel = inner.querySelector('.hint-label');
   if(animate){
     inner.classList.remove('updating');
-    inner.offsetHeight; // reflow
+    inner.offsetHeight; 
     inner.classList.add('updating');
     setTimeout(()=>inner.classList.remove('updating'), 420);
   }
@@ -956,13 +1274,11 @@ function tryUnlock(){
     wrongAttempts++;
     statEl.innerHTML='<span style="color:#c04030">Not the right code 🔒</span>';
     passEl.style.animation='none';passEl.offsetHeight;passEl.style.animation='shakeIn 0.45s ease';
-    // Auto-open hint after 1st wrong attempt, and update if already open
     if(wrongAttempts === 1 && !hintOpen){
       setTimeout(()=> openHint(), 500);
     } else if(hintOpen){
       setTimeout(()=> updateHintContent(true), 300);
     } else {
-      // Update silently so next open shows correct level
       updateHintContent(false);
     }
   }
@@ -970,7 +1286,6 @@ function tryUnlock(){
 subBtn.addEventListener('click',tryUnlock);
 passEl.addEventListener('keypress',e=>{if(e.key==='Enter')tryUnlock();});
 
-// Do NOT auto-focus on touch devices (prevents immediate mobile keyboard popup)
 if (!('ontouchstart' in window)) {
   setTimeout(()=>passEl.focus(),400);
 }
@@ -1052,9 +1367,8 @@ function buildLights(){
   lightsEl.innerHTML='';lightsEl.appendChild(svg);
 }
 
-// ── BALLOONS — exactly like reference: left side large, right side large, both pink
+// ── BALLOONS
 function buildBalloons(){
-  // Reference: large pink balloon left-center, medium pink right-center, another small right-lower
   [
     {x:'1%',  y:'32%', sz:95, col:'#f5b0c5', lean:-6, dl:0,   string:'#d090a8'},
     {x:'88%', y:'22%', sz:78, col:'#e8a0be', lean:5,  dl:1.1, string:'#c88098'},
@@ -1071,20 +1385,17 @@ function buildBalloons(){
   });
 }
 
-// ── SCATTERED DECO — hearts and stars like reference drawing style
+// ── SCATTERED DECO
 function buildDecos(){
   [
-    // left side
     {ch:'♡',x:'6%',  y:'40%',r:14, d:0,   c:'#d06878',sz:13},
     {ch:'♡',x:'4%',  y:'58%',r:-10,d:1.2, c:'#d06878',sz:11},
     {ch:'★',x:'9%',  y:'72%',r:-8, d:0.5, c:'#c88828',sz:12},
     {ch:'♡',x:'7%',  y:'25%',r:18, d:0.9, c:'#d06878',sz:10},
-    // right side
     {ch:'♡',x:'88%', y:'42%',r:-12,d:0.8, c:'#d06878',sz:12},
     {ch:'★',x:'85%', y:'18%',r:8,  d:0.4, c:'#c88828',sz:11},
     {ch:'♡',x:'91%', y:'64%',r:15, d:0.2, c:'#d06878',sz:13},
     {ch:'★',x:'87%', y:'75%',r:6,  d:1.1, c:'#c88828',sz:10},
-    // bottom
     {ch:'♡',x:'30%', y:'90%',r:-5, d:0.6, c:'#d06878',sz:11},
     {ch:'♡',x:'50%', y:'93%',r:0,  d:0.7, c:'#d06878',sz:12},
     {ch:'♡',x:'70%', y:'91%',r:8,  d:1.3, c:'#d06878',sz:10},
@@ -1100,52 +1411,33 @@ function buildDecos(){
 }
 
 // ── BUILD ALL CARDS
-// KEY: positions computed from viewport fractions BEFORE any DOM measurement
 function buildCards(){
   area.innerHTML='';cards.length=0;
   const vw=innerWidth,vh=innerHeight,mob=vw<600;
   const isLandscape = vw > vh;
 
-  // Space below header
   const HDR = mob ? (isLandscape ? 75 : 102) : 118;
   const H   = vh - HDR;
 
-  // Card sizes (fixed, not from DOM)
-  const PW  = mob ? 97  : 145;   // polaroid width
-  const PMW = mob ? 115 : 172;   // main polaroid width (center)
-  const NW  = mob ? 92  : 122;   // note width
+  const PW  = mob ? 97  : 145;
+  const PMW = mob ? 115 : 172;
+  const NW  = mob ? 92  : 122;
 
-  // ═══════════════════════════════════════════
-  // PHOTO POSITIONS — mirrored left/right
-  // Reference layout:
-  //   [0] upper-left    [1] upper-right
-  //         [2] center (big)
-  //   [3] lower-left    [4] lower-right
-  // ═══════════════════════════════════════════
   const PP=[
-    {xc:0.175, yf:0.03, r:-5.5},   // photo 0 — upper left
-    {xc:0.825, yf:0.02, r: 3.5},   // photo 1 — upper right
-    {xc:0.500, yf:0.14, r:-0.8},   // photo 2 — CENTER (main)
-    {xc:0.175, yf:0.52, r: 4.8},   // photo 3 — lower left
-    {xc:0.825, yf:0.50, r:-4.2},   // photo 4 — lower right
+    {xc:0.175, yf:0.03, r:-5.5},
+    {xc:0.825, yf:0.02, r: 3.5},
+    {xc:0.500, yf:0.14, r:-0.8},
+    {xc:0.175, yf:0.52, r: 4.8},
+    {xc:0.825, yf:0.50, r:-4.2},
   ];
 
-  // ═══════════════════════════════════════════
-  // NOTE POSITIONS — fill gaps between photos
-  // Reference:
-  //   note0 "23 looks"    → between photo0 & center, upper area
-  //   note1 "Keep smiling" → between photo3 & center, lower-left
-  //   note2 "You make"    → between center & photo1, upper-right
-  //   note3 "Some people" → between center & photo4, lower-right
-  // ═══════════════════════════════════════════
   const NP=[
-    {xc:0.355, yf:0.04, r:-5.0},   // note 0 — upper left gap
-    {xc:0.330, yf:0.50, r: 7.0},   // note 1 — lower left gap
-    {xc:0.650, yf:0.14, r:-4.0},   // note 2 — upper right gap
-    {xc:0.650, yf:0.50, r: 2.8},   // note 3 — lower right gap
+    {xc:0.355, yf:0.04, r:-5.0},
+    {xc:0.330, yf:0.50, r: 7.0},
+    {xc:0.650, yf:0.14, r:-4.0},
+    {xc:0.650, yf:0.50, r: 2.8},
   ];
 
-  // ── PHOTOS
   MEMS.forEach((mem,i)=>{
     const isMain=i===2;
     const W=isMain?PMW:PW;
@@ -1170,7 +1462,6 @@ function buildCards(){
     cards.push({el,type:'photo',idx:i,l:L,t:T,rot:pos.r,moved:false,locked:false,sx:0,sy:0,sl:0,st:0});
   });
 
-  // ── NOTES
   NOTES.forEach((nd,i)=>{
     const pos=NP[i];
     const L=Math.round(vw*pos.xc - NW/2);
@@ -1187,7 +1478,6 @@ function buildCards(){
     cards.push({el,type:'note',idx:-1,l:L,t:T,rot:pos.r,moved:false,locked:false,sx:0,sy:0,sl:0,st:0});
   });
 
-  // ── LOCKED CARD — centered at bottom
   const LW=mob?130:158;
   const LL=Math.round(vw/2 - LW/2);
   const LT=Math.round(HDR + H*0.71);
@@ -1200,8 +1490,6 @@ function buildCards(){
   lockedCard={el:lel,type:'locked',idx:-1,l:LL,t:LT,rot:-1.5,moved:false,locked:true,sx:0,sy:0,sl:0,st:0};
   cards.push(lockedCard);
 
-  // ── ARROW GUIDES (curved arrows toward locked card)
-  // Left arrow ↙  Right arrow ↘
   ['↙','↘'].forEach((ch,i)=>{
     const a=document.createElement('div');a.className='arrow-guide';a.id='ag'+i;
     a.style.cssText=`left:${i===0?LL-40:LL+LW+8}px;top:${LT-28}px;font-size:20px;color:#c07888;font-family:serif;`;
@@ -1209,20 +1497,16 @@ function buildCards(){
     area.appendChild(a);
   });
 
-  // ── TAPE on every card
-  // Widths array matches card order: ph0,ph1,ph2(main),ph3,ph4, n0,n1,n2,n3
   const CW=[PW,PW,PMW,PW,PW,NW,NW,NW,NW];
   [
-    // [cardIdx, tapeClass, w, h, rot, xOffsetFrac, yOff]
-    [0,'t-polka',  44,15,-9,  0.5,-7],   // photo 0 pink polka top
-    [1,'t-gingham',40,14, 8,  0.5,-7],   // photo 1 gingham blue top
-    // photo 2 has push-pin — no tape
-    [3,'t-heart',  46,15,13,  0.5,-7],   // photo 3 heart-pattern top
-    [4,'t-gingham',42,14,-6,  0.5,-7],   // photo 4 gingham top
-    [5,'t-polka',  36,13,-4,  0.5,-7],   // note 0
-    [6,'t-polka',  34,12, 7,  0.5,-7],   // note 1
-    [7,'t-gingham',36,12,-7,  0.5,-7],   // note 2
-    [8,'t-stripe', 38,13, 5,  0.5,-7],   // note 3
+    [0,'t-polka',  44,15,-9,  0.5,-7],
+    [1,'t-gingham',40,14, 8,  0.5,-7],
+    [3,'t-heart',  46,15,13,  0.5,-7],
+    [4,'t-gingham',42,14,-6,  0.5,-7],
+    [5,'t-polka',  36,13,-4,  0.5,-7],
+    [6,'t-polka',  34,12, 7,  0.5,-7],
+    [7,'t-gingham',36,12,-7,  0.5,-7],
+    [8,'t-stripe', 38,13, 5,  0.5,-7],
   ].forEach(([ci,cls,w,h,rot,xp,yo])=>{
     const c=cards[ci];if(!c)return;
     const tape=makeTape(cls,w,h,rot);
@@ -1230,7 +1514,6 @@ function buildCards(){
     tape.style.top=(c.t+yo)+'px';
     area.appendChild(tape);
   });
-  // Tape on locked card
   const lt=makeTape('t-polka',38,13,-3);
   lt.style.position='absolute';
   lt.style.left=(LL+LW/2-19)+'px';
@@ -1263,7 +1546,7 @@ function doUnlock(){
     s.style.left=(cx+(Math.random()-0.5)*140)+'px';
     s.style.top=(cy+(Math.random()-0.5)*95)+'px';
     s.style.animationDelay=(Math.random()*0.7)+'s';
-    document.body.appendChild(s);setTimeout(()=>s.remove(),3000);
+    document.body.appendChild(s);setTimeout(()=>s.remove(),4000); 
   }
   el.classList.add('shaking');
   el.addEventListener('animationend',function h(){el.classList.remove('shaking');el.removeEventListener('animationend',h);});
@@ -1274,6 +1557,11 @@ function doUnlock(){
     const sub=el.querySelector('.lk-sub');if(sub)sub.textContent='Tap to open ✨';
     lockedCard.locked=false;
     document.querySelectorAll('.arrow-guide').forEach(a=>a.classList.add('show'));
+    
+    if(!goldenTriggered) {
+      goldenTriggered = true;
+      setTimeout(triggerGoldenButterfly, 600);
+    }
   },600);
 }
 
@@ -1290,7 +1578,7 @@ function openViewer(cardEl,idx){
   lightbox.classList.add('active');
   requestAnimationFrame(()=>{morphOpen(curRect);spawnSparkles(8);startSparkles();});
   if(!viewed.has(idx)){viewed.add(idx);cardEl.classList.add('viewed');toast('🌸 Memory '+(viewed.size)+' of 5 collected');updateProgress();}
-  autoT=setTimeout(()=>closeViewer(),5500);
+  autoT=setTimeout(()=>closeViewer(),6500); 
 }
 function morphOpen(r){
   const wr=lbCnt.getBoundingClientRect();
@@ -1319,8 +1607,8 @@ function closeViewer(instant=false){
 lightbox.addEventListener('click',e=>{if(e.target.classList.contains('lb-ov'))closeViewer();});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&lightbox.classList.contains('active'))closeViewer();});
 
-function spawnSparkles(n){for(let i=0;i<n;i++){const s=document.createElement('div');s.className='sparkle';s.textContent=Math.random()>0.5?'✨':'⭐';s.style.left=(15+Math.random()*68)+'vw';s.style.top=(22+Math.random()*52)+'vh';s.style.animationDelay=(Math.random()*0.9)+'s';document.body.appendChild(s);setTimeout(()=>s.remove(),2900);}}
-function startSparkles(){stopSparkles();spkT=setInterval(()=>spawnSparkles(3),2100);}
+function spawnSparkles(n){for(let i=0;i<n;i++){const s=document.createElement('div');s.className='sparkle';s.textContent=Math.random()>0.5?'✨':'⭐';s.style.left=(15+Math.random()*68)+'vw';s.style.top=(22+Math.random()*52)+'vh';s.style.animationDelay=(Math.random()*1.5)+'s';document.body.appendChild(s);setTimeout(()=>s.remove(),4500);}}
+function startSparkles(){stopSparkles();spkT=setInterval(()=>spawnSparkles(3),2500);}
 function stopSparkles(){if(spkT){clearInterval(spkT);spkT=null;}}
 
 // ── DRAG
@@ -1330,28 +1618,49 @@ function moveDrag(cx,cy){
   if(!dragging)return;
   const dx=cx-dragging.sx,dy=cy-dragging.sy;
   if(Math.abs(dx)>2||Math.abs(dy)>2)dragging.moved=true;
+  
   const p=clamp(dragging.sl+dx,dragging.st+dy,dragging.el);
   dragging.l=p.l;dragging.t=p.t;
-  dragging.el.style.left=p.l+'px';dragging.el.style.top=p.t+'px';
-  if(!dragging.locked){const tilt=Math.max(-5,Math.min(5,dx*0.018));dragging.el.style.transform=`rotate(${dragging.rot+tilt}deg)`;}
+  
+  const tdx = p.l - dragging.sl;
+  const tdy = p.t - dragging.st;
+  
+  if(!dragging.locked){
+    const tilt=Math.max(-5,Math.min(5,dx*0.018));
+    dragging.el.style.transform=`translate3d(${tdx}px,${tdy}px,0) rotate(${dragging.rot+tilt}deg)`;
+  } else {
+    dragging.el.style.transform=`translate3d(${tdx}px,${tdy}px,0) rotate(${dragging.rot}deg)`;
+  }
 }
 function endDrag(){
   if(!dragging)return;
-  const c=dragging;c.el.classList.remove('dragging');
-  c.el.style.transition='box-shadow 0.22s,transform 0.32s cubic-bezier(0.25,0.8,0.25,1.2)';
-  if(!c.locked)c.el.style.transform=`rotate(${c.rot}deg)`;
-  if(!c.moved&&c.type==='photo')openViewer(c.el,c.idx);
-  if(!c.moved&&c.type==='locked'&&!c.locked)openCinematic();
+  const c=dragging;
+  c.el.classList.remove('dragging');
+  c.el.style.transition='box-shadow 0.22s, transform 0.32s cubic-bezier(0.25,0.8,0.25,1.2)';
+  
+  c.el.style.left = c.l + 'px';
+  c.el.style.top = c.t + 'px';
+  c.el.style.transform = `translate3d(0,0,0) rotate(${c.rot}deg)`;
+  
+  if(!c.moved && c.type==='photo' && !butterflyTransitioning && !busy) {
+    busy = true; 
+    butterflyTransitioning = true;
+    triggerPhotoButterfly(c.el, c.idx);
+  } else if(!c.moved && c.type==='locked' && !c.locked) {
+    openCinematic();
+  }
+  
+  setTimeout(()=>{ if(c.el) c.el.style.transition=''; }, 350);
+  
   dragging=null;
 }
 
-// Unified Pointer Events for Dragging (Fixes Mobile + Desktop conflicts)
 area.addEventListener('pointerdown',e=>{
   const el=e.target.closest('.polaroid')||e.target.closest('.sticky')||e.target.closest('.locked-card');
   if(!el)return;const inst=cards.find(c=>c.el===el);
   if(!inst||inst.locked)return;e.preventDefault();startDrag(inst,e.clientX,e.clientY);
 });
-window.addEventListener('pointermove',e=>{ if(dragging){ e.preventDefault(); moveDrag(e.clientX,e.clientY); } });
+window.addEventListener('pointermove',e=>{ if(dragging){ e.preventDefault(); moveDrag(e.clientX,e.clientY); } }, { passive: false });
 window.addEventListener('pointerup',()=>{ if(dragging)endDrag(); });
 window.addEventListener('pointercancel',()=>{ if(dragging)endDrag(); });
 
@@ -1386,21 +1695,28 @@ function startIntro(){
   }),300);
 }
 
-// Bokeh + star CSS
 const eCSS=document.createElement('style');
 eCSS.textContent=`
 @keyframes bokehP{0%,100%{opacity:0.35;transform:scale(1);}50%{opacity:0.9;transform:scale(1.35);}}
 @keyframes starTwinkle{0%,100%{opacity:0.1;transform:scale(0.7) rotate(0deg);}50%{opacity:0.82;transform:scale(1.25) rotate(22deg);}}
+/* CSS Override for Golden Butterfly */
+.butterfly-svg.golden path[fill="#f4b8c4"] { fill: #FFD700 !important; stroke: #8B6508 !important; }
+.butterfly-svg.golden path[fill="#e6c4ff"] { fill: #FFAF00 !important; stroke: #8B6508 !important; }
+.butterfly-svg.golden circle[fill="#8b3a4a"] { fill: #8B6508 !important; }
+.butterfly-svg.golden circle[fill="#6b3a8b"] { fill: #8B6508 !important; }
+.butterfly-svg.golden path[fill="#3a1a0a"] { fill: #5C4400 !important; stroke: #3a2800 !important; }
+.butterfly-svg.golden circle[fill="#3a1a0a"] { fill: #5C4400 !important; }
+.butterfly-svg.golden { filter: drop-shadow(0px 3px 6px rgba(255, 200, 50, 0.5)); }
 `;
 document.head.appendChild(eCSS);
 
 function showMain(){
   desk.classList.add('active');
   buildLights();buildBalloons();buildDecos();buildCards();
+  scheduleRandomButterfly(); 
 }
-// ══════════════════════════════════════════
-// DRAG-HEART UNLOCK SYSTEM — OPTIMISED FOR 60FPS MOBILE
-// ══════════════════════════════════════════════════════
+
+// ── DRAG-HEART UNLOCK SYSTEM
 (function(){
   const anchor   = $('wcHeartAnchor');
   const heartEl  = $('wcHeartEmoji');
@@ -1415,26 +1731,19 @@ function showMain(){
   const DRAG_TEXT = 'Drop the Heart';
   const DONE_TEXT = '❤️ Unlocked';
 
-  // ── State
   let isDragging=false, done=false, nearBtn=false;
   let tooltipT=null, particleT=null, trailT=null, rafId=null;
 
-  // ── Cached values — read ONCE at drag start, never during pointermove
   let btnCX=0, btnCY=0, attractR=0, dropR=0;
   let anchorCX=0, anchorCY=0;
 
-  // ── Raw pointer coords — written by event, read by rAF
   let rawX=0, rawY=0, prevX=0, prevY=0;
 
-  // ── Current rendered position (transform-based, no left/top during drag)
   let curX=0, curY=0;
+  let curScale = 1.3;
 
-  // ── Magnetic lerp target
   let targetX=0, targetY=0;
 
-  // ─────────────────────────────────────────
-  // HOVER (desktop only, pointer: fine)
-  // ─────────────────────────────────────────
   anchor.addEventListener('mouseenter',()=>{
     if(done||isDragging)return;
     heartEl.classList.add('hover-glow');
@@ -1469,14 +1778,10 @@ function showMain(){
     });
   }
 
-  // ─────────────────────────────────────────
-  // SPARKLE TRAIL — throttled, uses cached curX/curY (no DOM read)
-  // ─────────────────────────────────────────
   function startTrail(){
     stopTrail();
     trailT=setInterval(()=>{
       if(!isDragging)return;
-      // Use cached curX/curY — zero DOM reads
       const s=document.createElement('div');
       s.style.cssText=`position:fixed;z-index:9499;pointer-events:none;font-size:10px;
         left:${curX+(Math.random()-0.5)*20}px;top:${curY+(Math.random()-0.5)*20}px;
@@ -1484,27 +1789,21 @@ function showMain(){
       s.textContent=Math.random()>0.5?'✨':'💫';
       document.body.appendChild(s);
       setTimeout(()=>s.remove(),800);
-    },110); // slightly longer interval on mobile = fewer DOM writes
+    },110);
   }
   function stopTrail(){ if(trailT){clearInterval(trailT);trailT=null;} }
 
-  // ─────────────────────────────────────────
-  // RAF LOOP — single DOM write per frame
-  // ─────────────────────────────────────────
   function dragLoop(){
     if(!isDragging)return;
     rafId=requestAnimationFrame(dragLoop);
 
-    // Compute delta tilt from previous frame
     const dx=rawX-prevX;
     const tilt=Math.max(-18,Math.min(18,dx*0.08));
     prevX=rawX; prevY=rawY;
 
-    // Magnetic pull — lerp toward btnCenter when near
     const dist=Math.hypot(rawX-btnCX,rawY-btnCY);
 
     if(dist<70){
-      // Strong magnetic pull: blend 40% toward btn center
       const pull=Math.max(0,(70-dist)/70)*0.45;
       targetX=rawX+(btnCX-rawX)*pull;
       targetY=rawY+(btnCY-rawY)*pull;
@@ -1513,14 +1812,14 @@ function showMain(){
       targetY=rawY;
     }
 
-    // Smooth lerp for extra silkiness (0.75 = responsive, 1.0 = instant)
     curX+=(targetX-curX)*0.82;
     curY+=(targetY-curY)*0.82;
+    
+    const targetScale = dist<70 ? 1.32 : 1.25;
+    curScale += (targetScale - curScale) * 0.15;
 
-    // ── SINGLE DOM WRITE via transform3d (GPU, no reflow)
-    floatH.style.transform=`translate3d(${curX}px,${curY}px,0) translate(-50%,-50%) scale(${dist<70?1.32:1.25}) rotate(${tilt}deg)`;
+    floatH.style.transform=`translate3d(${curX}px,${curY}px,0) translate(-50%,-50%) scale(${curScale}) rotate(${tilt}deg)`;
 
-    // ── Near-button state toggle (class changes = cheap, batched by browser)
     if(dist<attractR && !nearBtn){
       nearBtn=true;
       btn.classList.add('near');
@@ -1534,9 +1833,6 @@ function showMain(){
     }
   }
 
-  // ─────────────────────────────────────────
-  // DRAG START — cache everything here
-  // ─────────────────────────────────────────
   function onDragStart(cx,cy){
     if(done)return;
     isDragging=true;
@@ -1547,63 +1843,49 @@ function showMain(){
     btn.classList.add('dragging');
     btnText.textContent=DRAG_TEXT;
 
-    // ── Cache all rect values NOW — never call getBoundingClientRect during move
     const btnR=btn.getBoundingClientRect();
     btnCX=btnR.left+btnR.width/2;
     btnCY=btnR.top+btnR.height/2;
-    attractR=btnR.width*0.65;   // magnetic attraction radius
-    dropR=btnR.width*0.6;       // auto-snap radius (wider = more forgiving)
+    attractR=btnR.width*0.65;
+    dropR=btnR.width*0.6;
     const aR=anchor.getBoundingClientRect();
     anchorCX=aR.left+aR.width/2;
     anchorCY=aR.top+aR.height/2;
 
-    // ── Init position vars
     rawX=cx; rawY=cy; prevX=cx; prevY=cy;
     curX=cx; curY=cy; targetX=cx; targetY=cy;
+    curScale = 1.3;
 
-    // ── Show floating heart at cursor, GPU-only positioning
     floatH.style.transition='filter 0.2s';
-    floatH.classList.add('dragging-heart');   // adds will-change:transform
-    floatH.style.transform=`translate3d(${cx}px,${cy}px,0) translate(-50%,-50%) scale(1.3) rotate(-8deg)`;
+    floatH.classList.add('dragging-heart');
+    floatH.style.transform=`translate3d(${cx}px,${cy}px,0) translate(-50%,-50%) scale(${curScale}) rotate(-8deg)`;
     floatH.style.display='block';
 
     document.body.style.cursor='grabbing';
     document.body.style.userSelect='none';
 
     startTrail();
-    // Start the rAF loop
     rafId=requestAnimationFrame(dragLoop);
   }
 
-  // ─────────────────────────────────────────
-  // POINTER MOVE — only update raw coords, do NO DOM writes here
-  // ─────────────────────────────────────────
   function onDragMove(cx,cy){
-    rawX=cx; rawY=cy;  // rAF loop reads these every frame
+    rawX=cx; rawY=cy;
   }
 
-  // ─────────────────────────────────────────
-  // DRAG END
-  // ─────────────────────────────────────────
   function onDragEnd(cx,cy){
     if(!isDragging)return;
     isDragging=false;
     document.body.style.cursor='';
     document.body.style.userSelect='';
 
-    // Cancel rAF loop
     if(rafId){cancelAnimationFrame(rafId);rafId=null;}
     stopTrail();
     stopBtnParticles();
 
-    // Remove will-change now that drag is over
     floatH.classList.remove('dragging-heart');
 
-    // Check against cached btnCX/btnCY — no getBoundingClientRect needed
     const dist=Math.hypot(cx-btnCX,cy-btnCY);
 
-    // Auto-snap if within magnetic radius OR explicit drop radius
-    // Use the wider of: actual drop position OR nearBtn (user was close)
     if(dist<dropR || nearBtn){
       dropSuccess(btnCX,btnCY);
     } else {
@@ -1611,32 +1893,21 @@ function showMain(){
     }
   }
 
-  // ─────────────────────────────────────────
-  // POINTER EVENTS — unified mouse + touch
-  // Fix: move/up listeners go on WINDOW after drag starts,
-  // so a tap (pointerdown → immediate pointerup without move)
-  // never triggers dropSuccess — only an actual drag does.
-  // ─────────────────────────────────────────
-
-  // Track whether the pointer has actually moved enough to count as a drag
   let hasMoved = false;
-  const MOVE_THRESHOLD = 6; // px — must move at least this far to be a drag
+  const MOVE_THRESHOLD = 6;
 
   anchor.addEventListener('pointerdown', e => {
     if(done) return;
     e.preventDefault();
     hasMoved = false;
 
-    // Store start position to measure movement
     const startCX = e.clientX;
     const startCY = e.clientY;
 
-    // ── pointermove on WINDOW — reliable on all devices
     function onMove(ev) {
       const dx = ev.clientX - startCX;
       const dy = ev.clientY - startCY;
 
-      // Only start drag once finger has actually moved
       if (!hasMoved && Math.hypot(dx, dy) > MOVE_THRESHOLD) {
         hasMoved = true;
         onDragStart(ev.clientX, ev.clientY);
@@ -1648,17 +1919,14 @@ function showMain(){
       }
     }
 
-    // ── pointerup on WINDOW
     function onUp(ev) {
       window.removeEventListener('pointermove', onMove);
       window.removeEventListener('pointerup', onUp);
       window.removeEventListener('pointercancel', onCancel);
 
       if (isDragging) {
-        // Real drag — check if it lands on button
         onDragEnd(ev.clientX, ev.clientY);
       } else {
-        // Pure tap (no movement) — show tooltip hint, do NOT snap
         const r = anchor.getBoundingClientRect();
         tooltip.style.left = (r.left + r.width/2) + 'px';
         tooltip.style.top  = (r.top - 42) + 'px';
@@ -1668,7 +1936,6 @@ function showMain(){
       }
     }
 
-    // ── pointercancel safety
     function onCancel() {
       window.removeEventListener('pointermove', onMove);
       window.removeEventListener('pointerup', onUp);
@@ -1687,15 +1954,12 @@ function showMain(){
 
   }, { passive: false });
 
-  // ─────────────────────────────────────────
-  // BUTTON PARTICLES — cached center from onDragStart
-  // ─────────────────────────────────────────
   function startBtnParticles(){
     stopBtnParticles();
     particleT=setInterval(()=>{
       const p=document.createElement('div'); p.className='slot-particle';
       const angle=Math.random()*Math.PI*2, d=20+Math.random()*40;
-      p.style.left=btnCX+'px'; p.style.top=btnCY+'px';  // cached, no getBCR
+      p.style.left=btnCX+'px'; p.style.top=btnCY+'px';
       p.style.setProperty('--tx',Math.cos(angle)*d+'px');
       p.style.setProperty('--ty',Math.sin(angle)*d+'px');
       document.body.appendChild(p); setTimeout(()=>p.remove(),800);
@@ -1703,12 +1967,8 @@ function showMain(){
   }
   function stopBtnParticles(){ if(particleT){clearInterval(particleT);particleT=null;} }
 
-  // ─────────────────────────────────────────
-  // DROP SUCCESS
-  // ─────────────────────────────────────────
   function dropSuccess(cx,cy){
     done=true;
-    // Animate heart to button center using CSS transition (no longer in rAF loop)
     floatH.style.transition='transform 0.25s cubic-bezier(0.34,1.56,0.64,1),filter 0.2s';
     floatH.style.transform=`translate3d(${cx}px,${cy}px,0) translate(-50%,-50%) scale(1)`;
 
@@ -1729,9 +1989,6 @@ function showMain(){
     },250);
   }
 
-  // ─────────────────────────────────────────
-  // SPARKLE EXPLOSION
-  // ─────────────────────────────────────────
   function explodeSparkles(cx,cy){
     ['✨','⭐','💖','🌸','💫','❤️'].forEach((em,i)=>{
       for(let j=0;j<3;j++){
@@ -1749,11 +2006,7 @@ function showMain(){
     });
   }
 
-  // ─────────────────────────────────────────
-  // BOUNCE BACK — uses cached anchorCX/anchorCY
-  // ─────────────────────────────────────────
   function bounceBack(){
-    // Smooth CSS transition back to anchor (not rAF, no need for 60fps here)
     floatH.style.transition='transform 0.5s cubic-bezier(0.34,1.56,0.64,1),filter 0.3s';
     floatH.style.transform=`translate3d(${anchorCX}px,${anchorCY}px,0) translate(-50%,-50%) scale(1) rotate(0deg)`;
     btn.classList.remove('near','dragging');
@@ -1768,9 +2021,6 @@ function showMain(){
     },520);
   }
 
-  // ─────────────────────────────────────────
-  // BUTTON CLICK HINT
-  // ─────────────────────────────────────────
   btn.addEventListener('click',()=>{
     if(done||isDragging)return;
     btn.style.animation='btnHintShake 0.5s ease';
